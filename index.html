@@ -1,0 +1,731 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>The Futurist Oath</title>
+<meta http-equiv="Cache-Control" content="no-cache">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Michroma&display=swap" rel="stylesheet">
+<link rel="preload" href="core-opt2.glb" as="fetch" crossorigin><link rel="preload" href="ring3.glb" as="fetch" crossorigin>
+<style>html,body{margin:0;height:100%;background:#000;overflow:hidden;touch-action:none;overscroll-behavior:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}canvas{display:block}
+#oath{position:fixed;left:4vw;right:4vw;top:50%;margin-top:-1em;text-align:center;pointer-events:none;height:2em;color:#e6f9ff;text-shadow:0 0 1px rgba(255,255,255,.9),0 0 8px rgba(110,220,255,.55),0 0 26px rgba(40,170,255,.35);font:400 clamp(15px,2.3vw,28px)/2 Michroma,Inter,system-ui,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#cfeefa}
+#oath span{position:absolute;left:0;right:0;top:0;opacity:0;-webkit-mask-image:linear-gradient(90deg,#000 40%,transparent 60%);mask-image:linear-gradient(90deg,#000 40%,transparent 60%);-webkit-mask-size:300% 100%;mask-size:300% 100%;-webkit-mask-position:100% 0;mask-position:100% 0}
+#oath span.on{opacity:1;animation:sweepIn 1.6s cubic-bezier(.4,0,.2,1) .35s both}
+#oath span.final{font-size:1.32em;letter-spacing:.24em;color:#fff;text-shadow:0 0 2px #fff,0 0 14px rgba(120,225,255,.8),0 0 42px rgba(40,170,255,.6),0 0 90px rgba(40,140,255,.35)}
+#oath span.final b{font-weight:400;display:inline-block;font-size:1.25em;color:#fff;text-shadow:0 0 3px #fff,0 0 18px rgba(140,235,255,.95),0 0 56px rgba(40,180,255,.8),0 0 120px rgba(40,140,255,.5)}
+#oath span.gone{opacity:1;-webkit-mask-image:linear-gradient(90deg,transparent 40%,#000 60%);mask-image:linear-gradient(90deg,transparent 40%,#000 60%);animation:sweepOut 1.1s ease-in both}
+@keyframes sweepIn{from{-webkit-mask-position:100% 0;mask-position:100% 0}to{-webkit-mask-position:0 0;mask-position:0 0}}
+@keyframes sweepOut{from{-webkit-mask-position:100% 0;mask-position:100% 0}to{-webkit-mask-position:0 0;mask-position:0 0}}
+#rtag{position:fixed;left:0;top:0;pointer-events:none;display:flex;align-items:center;gap:10px;opacity:0;transition:opacity .5s;font:400 10px/1.4 Michroma,Inter,system-ui,sans-serif;letter-spacing:.22em;text-shadow:0 0 8px rgba(80,200,255,.45);text-transform:uppercase;color:#cfeefa;white-space:nowrap}
+#rtag i{display:block;width:44px;height:1px;background:linear-gradient(90deg,rgba(127,232,255,0),rgba(127,232,255,.8))}#rtag small{display:block;font-size:9px;letter-spacing:.16em;color:#7fa9b6;margin-top:3px;text-transform:none}
+#tag{position:fixed;left:0;top:0;pointer-events:none;display:flex;align-items:center;gap:10px;opacity:0;transition:opacity .5s;font:400 10px/1.4 Michroma,Inter,system-ui,sans-serif;letter-spacing:.22em;text-shadow:0 0 8px rgba(80,200,255,.45);text-transform:uppercase;color:#cfeefa;white-space:nowrap}
+#tag i{display:block;width:56px;height:1px;background:linear-gradient(90deg,rgba(127,232,255,0),rgba(127,232,255,.8))}
+#tag b{font-weight:500}#tag small{display:block;font-size:10px;letter-spacing:.18em;color:#7fa9b6;margin-top:3px}
+#oathBg{position:fixed;left:50%;top:50%;width:min(92vw,1100px);height:clamp(130px,16vw,200px);transform:translate(-50%,-58%);pointer-events:none;opacity:0;transition:opacity 1.2s;
+  background:radial-gradient(circle,rgba(150,158,172,.55) 1.2px,transparent 1.7px) 0 0/7px 7px,rgba(4,6,8,.72);
+  -webkit-mask-image:radial-gradient(closest-side,#000 62%,transparent);mask-image:radial-gradient(closest-side,#000 62%,transparent);}
+#oathBg.on{opacity:1}#oathBg:not(.on){transition-duration:.6s}
+#oathT{position:fixed;left:0;right:0;top:50%;margin-top:-4.2em;text-align:center;pointer-events:none;font:400 10px/1 Michroma,Inter,system-ui,sans-serif;letter-spacing:.5em;text-transform:uppercase;color:#8fc3d2;text-shadow:0 0 10px rgba(80,200,255,.4);opacity:0;transition:opacity 1s}
+#oathT.on{opacity:1}
+#dust{position:fixed;left:0;top:0;pointer-events:none;z-index:3}#oath,#oathT{z-index:2}#oathBg{z-index:1}
+
+#oath.out span.on{animation:none;opacity:0;transition:opacity .35s}
+#qBtn{all:unset;position:fixed;right:16px;bottom:14px;z-index:10;cursor:pointer;font:400 9px/1 Michroma,Inter,sans-serif;letter-spacing:.24em;text-transform:uppercase;color:#55717a;padding:8px 10px;border:1px solid rgba(127,232,255,.15);border-radius:999px;background:rgba(0,0,0,.4)}
+#rec{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:9;pointer-events:none;font:400 8px/1 Michroma,Inter,sans-serif;letter-spacing:.3em;text-transform:uppercase;color:#4d6670;white-space:nowrap}
+@media (max-width:560px){#rec{bottom:52px}}
+#glLink{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:10;display:none;font:400 9px/1 Michroma,Inter,sans-serif;letter-spacing:.22em;text-transform:uppercase;color:#9fc3cf;text-decoration:none;padding:9px 14px;border:1px solid rgba(127,232,255,.25);border-radius:999px;background:rgba(0,0,0,.45);white-space:nowrap}
+#glLink:hover,#glLink:focus-visible{color:#fff;border-color:rgba(127,232,255,.7)}
+@media (max-width:560px){#glLink{bottom:52px;font-size:8px}}
+#ltBtn{all:unset;position:fixed;left:16px;bottom:14px;z-index:10;cursor:pointer;font:400 9px/1 Michroma,Inter,sans-serif;letter-spacing:.24em;text-transform:uppercase;color:#9fc3cf;padding:8px 12px;border:1px solid rgba(127,232,255,.3);border-radius:999px;background:rgba(0,0,0,.45)}
+#ltBtn:hover,#ltBtn:focus-visible{color:#fff;border-color:rgba(127,232,255,.7)}#ltBtn[disabled]{opacity:.35;cursor:default}
+body.hue #oath,body.hue #oathT,body.hue #tag,body.hue #rtag,body.hue #dust,body.hue #oathBg,body.hue #flash,body.hue #ltBtn,body.hue #qBtn,body.hue #l{filter:hue-rotate(var(--hue))}
+#qBtn:hover,#qBtn:focus-visible{color:#cfeefa;border-color:rgba(127,232,255,.45)}
+#flash{position:fixed;inset:0;pointer-events:none;z-index:15;opacity:0;mix-blend-mode:screen;overflow:hidden}
+#flash i{position:absolute;left:0;top:0;width:20px;height:20px;margin:-10px 0 0 -10px;border-radius:50%;background:radial-gradient(circle,#fff 0,#fff 45%,#dff9ff 62%,#7fdcff 80%,rgba(60,180,255,0) 100%);transform:scale(0)}
+#grid{position:fixed;inset:0;pointer-events:none;mix-blend-mode:screen;opacity:.55;
+  background:radial-gradient(circle,rgba(150,165,185,.5) .9px,transparent 1.3px) 0 0/22px 22px,radial-gradient(circle,rgba(150,165,185,.9) 1.1px,transparent 1.6px) 11px 11px/110px 110px;
+  -webkit-mask-image:radial-gradient(ellipse 70% 75% at 50% 45%,transparent 25%,#000 85%);mask-image:radial-gradient(ellipse 70% 75% at 50% 45%,transparent 25%,#000 85%)}
+#l{position:fixed;inset:0;z-index:20;display:grid;place-items:center;background:#000;transition:opacity 1.2s ease,visibility 1.2s;font-family:Michroma,Inter,system-ui,sans-serif;color:#cfeefa;text-align:center}
+#l.done{opacity:0;visibility:hidden}
+#l .sp{display:flex;flex-direction:column;align-items:center;gap:14px;padding:0 16px}
+#l .mk{width:78px;height:78px;fill:none;stroke:#7fe8ff;stroke-width:1;filter:drop-shadow(0 0 6px rgba(80,200,255,.7));animation:spin 14s linear infinite}
+#l .mk .d{stroke-dasharray:3 5;opacity:.6;animation:spin 6s linear infinite reverse;transform-origin:50% 50%}
+#l .mk path{stroke-width:1.4;animation:breath 2.4s ease-in-out infinite}
+@keyframes spin{to{transform:rotate(360deg)}}@keyframes breath{50%{opacity:.35}}
+#l h1{margin:10px 0 0;font:400 clamp(16px,2.4vw,24px) Michroma,sans-serif;letter-spacing:.32em;text-transform:uppercase;text-shadow:0 0 1px #fff,0 0 12px rgba(110,220,255,.6),0 0 30px rgba(40,170,255,.35)}
+#l p{margin:0;font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:#7fa9b6}
+#l .bar{width:min(240px,60vw);height:1px;background:rgba(127,232,255,.15);margin-top:14px;overflow:hidden}
+#l .bar i{display:block;height:100%;width:0;background:#7fe8ff;box-shadow:0 0 8px #7fe8ff;transition:width .3s}
+#l span{font-size:9px;letter-spacing:.3em;color:#7fa9b6}
+#l button{all:unset;cursor:pointer;margin-top:18px;padding:12px 34px;border:1px solid rgba(127,232,255,.45);border-radius:999px;font:400 10px Michroma,sans-serif;letter-spacing:.4em;text-transform:uppercase;color:#e6f9ff;
+  background:rgba(127,232,255,.06);box-shadow:0 0 18px rgba(80,200,255,.18);opacity:0;pointer-events:none;transition:opacity .8s,background .3s,box-shadow .3s}
+#l button.on{opacity:1;pointer-events:auto}#l button:hover,#l button:focus-visible{background:rgba(127,232,255,.16);box-shadow:0 0 28px rgba(80,200,255,.4)}
+#l small{font:9px Inter,sans-serif;letter-spacing:.12em;color:#55717a;opacity:0;transition:opacity .8s}#l button.on+small{opacity:1}</style>
+<script>window.LANTERN_EDITION='site'</script>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+</head><body><div id="grid"></div>
+<div id="flash"><i></i></div>
+<button id="qBtn" type="button" title="Visual quality">Quality</button>
+<div id="rec">For recreational use only</div>
+<a id="glLink" href="https://lantern-oath-play.web.app/" target="_blank" rel="noopener">Recreational Green Lantern version ↗</a>
+<button id="ltBtn" type="button" hidden style="display:none"></button>
+<div id="l"><div class="sp">
+  <h1>The Futurist Oath</h1><p id="lmsg">Initialising core</p>
+  <div class="bar"><i id="lbar"></i></div><span id="lpc">0%</span>
+  <button id="lgo" type="button">Tap to begin</button><small>Sound on</small></div></div>
+<div id="rtag" class="tg"><i></i><div><b>Drag the ring</b><small>to say the Futurist Oath</small></div></div>
+<div id="tag"><i></i><div><b>Charge me</b><small>drag the ring or tap the centre</small></div></div>
+<canvas id="dust"></canvas>
+<div id="oathBg"></div>
+<div id="oathT">The Futurist Oath</div>
+<div id="oath" aria-live="polite" aria-label="The Futurist Oath"><span>In brightest day,</span><span>in darkest night,</span><span>I’ll embrace my mind,</span><span>I’ll do what’s right.</span><span>I choose this dream,</span><span>I choose this fight,</span><span>In service to this</span><span class="final"><b>future’s light.</b></span></div>
+<script type="module">
+import * as THREE from 'three';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
+import {EffectComposer} from 'three/addons/postprocessing/EffectComposer.js';
+import {RenderPass} from 'three/addons/postprocessing/RenderPass.js';
+import {UnrealBloomPass} from 'three/addons/postprocessing/UnrealBloomPass.js';
+import {ShaderPass} from 'three/addons/postprocessing/ShaderPass.js';
+import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
+
+// adaptive quality: pick a tier from the device, step down at runtime if frames run long
+const TIERS={high:{dpr:1.5,bloom:2,halo:900,orb:2,txt:3,rch:420},med:{dpr:1.15,bloom:1.5,halo:500,orb:2,txt:3,rch:260},low:{dpr:.85,bloom:0,halo:220,orb:1,txt:4,rch:140},lite:{dpr:.6,bloom:0,halo:90,orb:1,txt:5,rch:60,fps:30,orbDetail:8}};
+let PIN0=false;function detectTier(){const q=new URLSearchParams(location.search).get('q');if(TIERS[q]){PIN0=true;return q;}
+  try{const saved=localStorage.getItem('oathQ');if(TIERS[saved]){PIN0=true;return saved;}}catch(e){}
+  let score=0;const mem=navigator.deviceMemory||8,cores=navigator.hardwareConcurrency||8,mobile=/Android|iPhone|iPad|Mobile/i.test(navigator.userAgent);
+  if(mem<=4)score++;if(cores<=4)score++;if(mobile)score++;
+  try{const g=document.createElement('canvas').getContext('webgl'),d=g&&g.getExtension('WEBGL_debug_renderer_info'),gpu=d?g.getParameter(d.UNMASKED_RENDERER_WEBGL):'';
+    if(/Intel|Mali|Adreno [1-5]|PowerVR|SwiftShader|llvmpipe|Microsoft Basic/i.test(gpu))score++;if(/SwiftShader|llvmpipe|Basic Render/i.test(gpu))score+=2;}catch(e){}
+  return score>=5?'lite':score>=3?'low':score>=1?'med':'high';}
+let TIER=detectTier(),Q=TIERS[TIER];
+const r=new THREE.WebGLRenderer({antialias:TIER!=='low',powerPreference:'high-performance'});
+r.setPixelRatio(Math.min(devicePixelRatio,Q.dpr));r.setSize(innerWidth,innerHeight);
+r.toneMapping=THREE.ACESFilmicToneMapping;r.toneMappingExposure=0.75;
+document.body.appendChild(r.domElement);
+const scene=new THREE.Scene();scene.background=new THREE.Color(0);
+scene.environment=new THREE.PMREMGenerator(r).fromScene(new RoomEnvironment(),0.04).texture;
+scene.environmentIntensity=0.08;
+const cam=new THREE.PerspectiveCamera(35,innerWidth/innerHeight,0.01,100);cam.position.set(0,1.9,8.6);
+// no pinch zoom: iOS ignores user-scalable, so block its gesture events and multi-touch page zoom
+['gesturestart','gesturechange','gestureend'].forEach(ev=>document.addEventListener(ev,e=>e.preventDefault(),{passive:false}));
+document.addEventListener('touchmove',e=>{if(e.touches.length>1)e.preventDefault();},{passive:false});
+let _lastTouch=0;document.addEventListener('touchend',e=>{const n=Date.now();if(n-_lastTouch<320)e.preventDefault();_lastTouch=n;},{passive:false});   // no double-tap zoom
+const ctl=new OrbitControls(cam,r.domElement);ctl.enableDamping=true;ctl.target.set(0,1.15,0);
+if(matchMedia('(pointer:coarse)').matches){ctl.enableZoom=false;ctl.touches.TWO=THREE.TOUCH.ROTATE;}ctl.autoRotate=true;ctl.autoRotateSpeed=0.18;ctl.minDistance=3;ctl.maxDistance=14;
+
+// lights: cool rim + warm key so the brass reads on black
+const key=new THREE.DirectionalLight(0xffe2b8,1.0);key.position.set(3,4,3);scene.add(key);
+const rim=new THREE.DirectionalLight(0x5cc8e0,1.4);rim.position.set(-3,2,-3);scene.add(rim);
+const core=new THREE.PointLight(0x2fd8ff,4,4,1.5);core.position.set(0,.72,0);
+
+// black reflective floor
+const floor=new THREE.Mesh(new THREE.CircleGeometry(6,64),new THREE.MeshStandardMaterial({color:0x020304,roughness:0.35,metalness:0.6}));
+floor.rotation.x=-Math.PI/2;
+
+const LM=new THREE.LoadingManager();const lbar=document.getElementById('lbar'),lpc=document.getElementById('lpc');let ready=0;
+LM.onProgress=(u,a,b)=>{};
+const prog={};let audN=0,audT=8;function audTick(){audN++;progress('aud',{});if(ready>=2)gate();}
+function progress(id,e){if(e.total)prog[id]=e.loaded/e.total;const v=['core','ring'].map(k=>prog[k]||0),p=(v[0]+v[1]+Math.min(1,audN/audT))/3;lbar.style.width=(p*100).toFixed(0)+'%';lpc.textContent=(audN<audT&&prog.core>=1?'Voice '+audN+'/'+audT+' · ':'')+Math.round(p*100)+'%';}
+function partReady(){if(++ready<2)return;prog.core=prog.ring=1;progress('x',{});gate();setTimeout(()=>gate(true),12000);}
+let gated=false;const TOUCH=matchMedia('(pointer:coarse)').matches;
+function gate(force){if(gated||ready<2||(!force&&audN<audT))return;gated=true;lbar.style.width='100%';lpc.textContent='100%';
+  const L=document.getElementById('l'),msg=document.getElementById('lmsg');
+  if(!TOUCH){msg.textContent='Core online';setTimeout(()=>L.classList.add('done'),500);return;}
+  // phones: one real tap unlocks every sound before the scene starts
+  msg.textContent='Core online · sound ready';const b=document.getElementById('lgo');b.classList.add('on');
+  b.onclick=e=>{try{unlockAudio(e);clipTry=false;unlockClips();}catch(err){}L.classList.add('done');};}
+// browsers only allow sound after a gesture: unlock on the first touch anywhere
+function unlockAudio(e){try{hookAudio();audioOut();}catch(err){}if(e&&e.type!=='pointerdown')unlockClips();try{if(navigator.audioSession)navigator.audioSession.type='playback';}catch(e){}   // iOS: play through the silent switch
+  try{hookAudio();if(actx){actx.resume();const b=actx.createBuffer(1,1,22050),src=actx.createBufferSource();src.buffer=b;src.connect(audioOut());src.start(0);}loadBufs();}catch(e){}
+  if(actx&&actx.state==='running'&&clipsUnlocked)['pointerup','touchend','click','keydown'].forEach(ev=>removeEventListener(ev,unlockAudio,true));}
+let clipsUnlocked=false;['pointerup','touchend','click','keydown'].forEach(ev=>addEventListener(ev,unlockAudio,true));
+addEventListener('pointerdown',unlockAudio,true);
+// unlock every oath clip inside a real gesture (once): the oath starts later from the animation, where Safari would refuse them
+let clipTry=false;function unlockClips(){if(clipTry||oathOn())return;clipTry=true;
+  try{const prime=(a,ok,bad)=>{if(a._wanted)return;a.muted=true;a.play().then(()=>{if(!a._wanted){a.pause();a.currentTime=0;}a.muted=false;ok&&ok();}).catch(()=>{a.muted=false;bad&&bad();});};
+    Object.values(sfxEl).forEach(a=>prime(a));clips.forEach(c=>prime(c,()=>{clipsUnlocked=true;},()=>{clipTry=false;}));}catch(e){clipTry=false;}}
+const U={uTime:{value:0},uY0:{value:0},uY1:{value:1},uLift:{value:0},uBlast:{value:0},uVoice:{value:0},uRigInv:{value:new THREE.Matrix4()},uMed:{value:new THREE.Vector3(0,.67,.37)},uDiscR:{value:.2},uTriR:{value:.075},uMode:{value:0}};
+const MED=U.uMed.value;
+const VOICE_V='this-4';
+// lanterns: each has its own oath, voice set and light colour (hue shift applied to the whole scene)
+const LANTERNS={
+  futurist:{label:'Futurist',title:'The Futurist Oath',dir:'voice/',ver:VOICE_V,hue:0,ring:'ring3.glb',body:'core-opt2.glb',mode:0,glass:[.07,1.38],med:[0,.67,.37],disc:[.2,.075],cue:'tri',
+    lines:['In brightest day,','in darkest night,','I’ll embrace my mind,','I’ll do what’s right.','I choose this dream,','I choose this fight,','In service to this','future’s light.'],
+    len:[2.25,2.3,2.7,2.3,2.675,2.625,2.75,4.525]},
+  hal:{label:'Hal’s',title:'Hal’s Oath',dir:'voice/hal/',ver:'echo3',hue:-62,ring:'ring-john.glb',body:'lantern-hal.glb',mode:2,glass:[.17,1.2],med:[0,.72,.49],disc:[.15,.05],cue:'circle',
+    lines:['In brightest day,','in blackest night,','no wrong escapes','my watchful sight.','Let those who serve','the darkness’ might,','beware my will —','this lantern’s light.'],
+    len:[2.1,2.0,2.13,2.08,2.23,2.05,2.08,4.25]},
+  john:{label:'John’s',title:'John’s Oath',dir:'voice/john/',ver:'onyx1',ring:'ring-john.glb',body:'lantern-john.glb',mode:1,glass:[.1,1.4],med:[0,.71,.40],disc:[.13,.05],cue:'circle',hue:-112,
+    lines:['In brightest day,','in darkest night,','I’ll embrace my fear,','I’ll do what’s right.','I choose this ring,','I choose this fight,','In service to this','lantern’s light.'],
+    len:[2.05,1.82,2.5,1.8,2.1,2.0,2.02,3.7]}};
+const EDITIONS={site:['futurist'],gl:['john','hal'],all:['futurist','hal','john']};const EDITION=EDITIONS[window.LANTERN_EDITION]?window.LANTERN_EDITION:'all';
+for(const k of Object.keys(LANTERNS))if(!EDITIONS[EDITION].includes(k))delete LANTERNS[k];
+let LT=(()=>{const q=new URLSearchParams(location.search).get('l');if(LANTERNS[q])return q;try{const v=localStorage.getItem('oathL');if(LANTERNS[v])return v;}catch(e){}return Object.keys(LANTERNS)[0];})();
+const mkClips=id=>{const d=LANTERNS[id];return [1,2,3,4,5,6,7,8].map(n=>{const a=new Audio(`${d.dir}oath-${n}.wav?v=${d.ver}`);a.preload='auto';
+  fetch(a.src).then(r=>r.blob()).then(b=>{if(!a._wanted){a.src=URL.createObjectURL(b);a.load();}}).catch(()=>{}).finally(()=>{if(!gated)audTick();});return a;});};
+let clips=mkClips(LT);
+const LS=1.5,UPV=new THREE.Vector3(0,1,0);const rig=new THREE.Group();rig.scale.setScalar(LS);scene.add(rig);rig.add(core);
+let energy;
+function prepLantern(m){
+  const b=new THREE.Box3().setFromObject(m),s=2/(b.max.y-b.min.y),c=b.getCenter(new THREE.Vector3());
+  m.scale.setScalar(s);m.position.set(-c.x*s,-b.min.y*s,-c.z*s);
+  const ms=[];m.traverse(o=>{if(o.isMesh)ms.push(o)});ms.forEach(o=>{
+    const mk=pass=>{const mat=new THREE.MeshPhysicalMaterial({map:o.material.map,normalMap:o.material.normalMap,
+      roughnessMap:o.material.roughnessMap,metalnessMap:o.material.metalnessMap,
+      roughness:o.material.roughness,metalness:o.material.metalness,
+      transparent:pass==1,side:pass==1?THREE.FrontSide:THREE.DoubleSide,depthWrite:pass==0,
+      clearcoat:0,clearcoatRoughness:0.55});
+    mat.onBeforeCompile=sh=>{Object.assign(sh.uniforms,U);
+      sh.vertexShader='uniform mat4 uRigInv;varying float vY;varying vec3 vWP,vLP;\n'+sh.vertexShader.replace('#include <worldpos_vertex>','#include <worldpos_vertex>\nvWP=(modelMatrix*vec4(transformed,1.)).xyz;vLP=(uRigInv*vec4(vWP,1.)).xyz;vY=vLP.y;');
+      sh.fragmentShader='uniform mat4 uRigInv;uniform vec3 uMed;uniform float uTime,uY0,uY1,uLift,uBlast,uVoice,uDiscR,uTriR,uMode;varying float vY;varying vec3 vWP,vLP;float gMask,metalPlate;\n'+sh.fragmentShader
+       .replace('#include <map_fragment>',`#include <map_fragment>
+         vec3 tc=diffuseColor.rgb;
+         float ly=vY;float band=smoothstep(uY0,uY0+.06,ly)*(1.-smoothstep(uY1-.06,uY1,ly));
+         float mJ=step(.5,uMode),mH=step(1.5,uMode);
+         float cool=mix(mix(smoothstep(-.02,.08,tc.b-tc.r),max(smoothstep(-.03,.05,tc.g-tc.r),(1.-smoothstep(.07,.2,dot(tc,vec3(.33))))*(1.-smoothstep(.02,.08,tc.r-tc.b))),mJ),max(smoothstep(.02,.09,tc.g-max(tc.r,tc.b)),smoothstep(.005,.025,tc.g-max(tc.r,tc.b))*(1.-smoothstep(.05,.12,dot(tc,vec3(.33))))),mH);   // glass: blue (futurist) / green (john); brass has r>b,g
+         float steel=1.-smoothstep(.02,.1,abs(tc.r-tc.b)+.0)*0.;
+         gMask=band*cool;
+         float md=length(vLP.xy-uMed.xy);float front=step(uMed.z-.22,vLP.z);
+         float disc=front*(1.-smoothstep(uDiscR,uDiscR+.015,md));float tri=front*(1.-smoothstep(uTriR,uTriR+.015,md));
+         float plate=disc*(1.-tri)*(1.-smoothstep(.03,.1,tc.r-tc.b))*(1.-smoothstep(uDiscR-.015,uDiscR,md))*(1.-mJ);gMask*=1.-disc*(1.-tri);
+         diffuseColor.rgb=mix(tc,mix(tc*.008+vec3(.002,.008,.011),tc*mix(.3,.36,mH),mJ),gMask);   // john keeps the glass texture
+         diffuseColor.rgb=mix(diffuseColor.rgb,vec3(.004),plate);metalPlate=plate;
+         diffuseColor.a=mix(1.,mix(.94,mix(.985,.82,mH),mJ),gMask);`)
+       .replace('#include <dithering_fragment>','#include <dithering_fragment>\n'+'gl_FragColor.rgb=min(gl_FragColor.rgb,vec3('+(pass==1?'1.05':'1.25')+'));'+(pass==0?'if(gMask>.5)discard;gl_FragColor.a=1.;':'if(gMask<=.5)discard;'))
+       .replace('#include <emissivemap_fragment>',`#include <emissivemap_fragment>
+         float md2=0.;float tl=dot(diffuseColor.rgb,vec3(.3,.59,.11));float detail=mix(1.,.35+tl*2.4,step(.5,uMode));float fl=.75+.25*sin(vY*14.-uTime*3.)*sin(uTime*1.7+vY*5.);
+         vec3 tcm=normalize((uRigInv*vec4(cameraPosition,1.)).xyz-vLP);float lat=dot(vLP.xz,normalize(vec2(-tcm.z,tcm.x)));float face=exp(-lat*lat/.008);float fr=1.-abs(dot(normalize(nonPerturbedNormal),normalize(vViewPosition)));totalEmissiveRadiance+=vec3(.35,.75,.9)*gMask*(pow(fr,2.5)*.55+pow(fr,8.)*.6);totalEmissiveRadiance+=vec3(.05,.6,.85)*gMask*fl*face*1.1*detail+vec3(.2,.85,1.)*tri*cool*(fl*1.5+uBlast*6.);`)
+       .replace('#include <lights_physical_fragment>','#include <lights_physical_fragment>\nmaterial.specularColor*=mix(.55,.12,gMask);material.specularF90*=mix(.55,.12,gMask);')
+       .replace('#include <roughnessmap_fragment>','#include <roughnessmap_fragment>\nroughnessFactor=mix(roughnessFactor,.85,gMask);roughnessFactor=mix(roughnessFactor,.7,metalPlate);')
+       .replace('#include <metalnessmap_fragment>','#include <metalnessmap_fragment>\nmetalnessFactor=mix(metalnessFactor,0.,gMask);metalnessFactor=mix(metalnessFactor,.2,metalPlate);roughnessFactor=mix(roughnessFactor,.85,gMask);roughnessFactor=mix(roughnessFactor,.7,metalPlate);roughnessFactor=max(roughnessFactor,.5);');
+    };
+    mat.customProgramCacheKey=()=>"core"+pass;return mat;};
+    o.material=mk(0);o.renderOrder=0;const gl=new THREE.Mesh(o.geometry,mk(1));gl.renderOrder=2;o.add(gl);});
+  return m;}
+const bodies={};
+function loadBody(f,cb){if(bodies[f]){cb&&cb(bodies[f]);return;}new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).load(f,g=>{bodies[f]=prepLantern(g.scene);bodies[f].visible=false;rig.add(bodies[f]);cb&&cb(bodies[f]);},e=>cb&&progress('core',e));}
+function showBody(id){const d=LANTERNS[id];for(const k in bodies)bodies[k].visible=(k===d.body);U.uY0.value=d.glass[0];U.uY1.value=d.glass[1];U.uMode.value=d.mode;MED.fromArray(d.med);U.uDiscR.value=d.disc[0];U.uTriR.value=d.disc[1];
+  beam.position.copy(MED);flare.position.copy(MED).z+=.05;cue.position.copy(MED).z+=.005;const cg=d.cue==='circle'?new THREE.RingGeometry(.07,.077,64):new THREE.RingGeometry(.085,.093,3,1,-Math.PI/2);cueRings.forEach(r=>{r.geometry.dispose();r.geometry=cg;});if(bodies[d.body])window.__m=bodies[d.body];}
+loadBody(LANTERNS[LT].body,m=>{showBody(LT);
+  window.__m=m;window.__ctl=ctl;window.__cam=cam;window.__THREE=THREE;
+
+  // the energy inside: layered additive columns + drifting motes
+  energy=new THREE.Group();energy.position.y=0.72;
+  const NOISE=`vec4 pm(vec4 x){return mod(((x*34.)+1.)*x,289.);}
+    float sn(vec3 v){const vec2 C=vec2(1./6.,1./3.);vec3 i=floor(v+dot(v,C.yyy)),x0=v-i+dot(i,C.xxx);vec3 g=step(x0.yzx,x0.xyz),l=1.-g,i1=min(g,l.zxy),i2=max(g,l.zxy);
+    vec3 x1=x0-i1+C.x,x2=x0-i2+2.*C.x,x3=x0-1.+3.*C.x;i=mod(i,289.);vec4 p=pm(pm(pm(i.z+vec4(0.,i1.z,i2.z,1.))+i.y+vec4(0.,i1.y,i2.y,1.))+i.x+vec4(0.,i1.x,i2.x,1.));
+    vec3 ns=.142857142857*vec3(2.,.5,1.)-vec3(0.,1.,0.);vec4 j=p-49.*floor(p*ns.z*ns.z),x_=floor(j*ns.z),y_=floor(j-7.*x_),x=x_*ns.x+ns.yyyy,y=y_*ns.x+ns.yyyy,h=1.-abs(x)-abs(y);
+    vec4 b0=vec4(x.xy,y.xy),b1=vec4(x.zw,y.zw),s0=floor(b0)*2.+1.,s1=floor(b1)*2.+1.,sh=-step(h,vec4(0.));vec4 a0=b0.xzyw+s0.xzyw*sh.xxyy,a1=b1.xzyw+s1.xzyw*sh.zzww;
+    vec3 p0=vec3(a0.xy,h.x),p1=vec3(a0.zw,h.y),p2=vec3(a1.xy,h.z),p3=vec3(a1.zw,h.w);vec4 nr=1.79284291400159-.85373472095314*vec4(dot(p0,p0),dot(p1,p1),dot(p2,p2),dot(p3,p3));
+    p0*=nr.x;p1*=nr.y;p2*=nr.z;p3*=nr.w;vec4 m=max(.6-vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)),0.);m=m*m;return 42.*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));}`;
+  const eMat=k=>new THREE.ShaderMaterial({uniforms:{uTime:U.uTime,k:{value:k},uB:U.uBlast,uV:U.uVoice},transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,side:THREE.DoubleSide,
+    vertexShader:NOISE+`uniform float uTime,k,uB,uV;varying vec3 vN,vV,vP;
+      vec3 warp(vec3 p){float t=uTime*(.35+k*.15)+uV*.6;return p+normalize(p)*(sn(p*.9+vec3(0.,t,k*3.))*.2+sn(p*1.8-t)*.04)*(1.+uB*.8+uV*2.4);}
+      void main(){vec3 p=warp(position);vec3 tn=normalize(cross(normal,vec3(0.,1.,.1)));vec3 bn=cross(normal,tn);
+        vec3 n=normalize(cross(warp(position+tn*.01)-p,warp(position+bn*.01)-p));vP=position;
+        vec4 mv=modelViewMatrix*vec4(p,1.);vN=normalize(normalMatrix*n);vV=normalize(-mv.xyz);gl_Position=projectionMatrix*mv;}`,
+    fragmentShader:NOISE+`uniform float uTime,k,uB,uV;varying vec3 vN,vV,vP;
+      void main(){float f=1.-abs(dot(vN,vV));float rim=pow(f,2.4)*1.1+pow(f,7.)*2.2;
+        float sw=sn(vP*2.2+vec3(0.,uTime*.4,0.));float streak=smoothstep(.06,0.,abs(sw))*.22*(1.-f);
+        float a=(rim+streak)*(k<.5?1.:.55)*(1.+uB*1.5+uV*3.5);
+        gl_FragColor=vec4(mix(vec3(.05,.45,1.),vec3(.7,.97,1.),clamp(rim*.5,0.,1.))*a,1.);}`});
+  [[0,1],[1,.62]].slice(0,Q.orb).forEach(([k,sc])=>{const me=new THREE.Mesh(new THREE.IcosahedronGeometry(1,Q.orbDetail||22),eMat(k));me.scale.set(.27*sc,.5*sc,.27*sc);me.renderOrder=1;energy.add(me);});
+  const N=260,pg=new THREE.BufferGeometry(),pp=new Float32Array(N*3);
+  for(let i=0;i<N;i++){const a=Math.random()*6.28,rr=Math.sqrt(Math.random())*.16;pp.set([Math.cos(a)*rr,(Math.random()-.5)*1.1,Math.sin(a)*rr],i*3);}
+  pg.setAttribute('position',new THREE.BufferAttribute(pp,3));
+  const pts=new THREE.Points(pg,new THREE.PointsMaterial({color:0x8ff0ff,size:.018,transparent:true,opacity:.55,blending:THREE.AdditiveBlending,depthWrite:false}));
+  energy.add(pts);energy.userData.pts=pts;rig.add(energy);
+  partReady();
+},e=>progress('core',e),e=>{document.getElementById('lmsg').textContent='Load failed';console.error(e)});
+
+
+// soft round additive dots: radiating halo + click blast
+const dotMat=()=>new THREE.ShaderMaterial({transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,
+  uniforms:{uPx:{value:r.getPixelRatio()}},
+  vertexShader:'attribute float a,sz;varying float vA;uniform float uPx;void main(){vA=a;vec4 p=modelViewMatrix*vec4(position,1.);gl_PointSize=sz*uPx*(3./-p.z);gl_Position=projectionMatrix*p;}',
+  fragmentShader:'varying float vA;void main(){float d=length(gl_PointCoord-.5);float g=smoothstep(.5,0.,d);gl_FragColor=vec4(mix(vec3(.1,.6,1.),vec3(.75,1.,1.),g*g)*g*vA,1.);}'});
+function dotSet(n){const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(new Float32Array(n*3),3));
+  g.setAttribute('a',new THREE.BufferAttribute(new Float32Array(n),1));g.setAttribute('sz',new THREE.BufferAttribute(new Float32Array(n),1));
+  const p=new THREE.Points(g,dotMat());p.frustumCulled=false;p.userData={v:new Float32Array(n*3),life:new Float32Array(n),max:new Float32Array(n)};return p;}
+// halo: motes leave the glass and drift outward
+const halo=dotSet(900);rig.add(halo);
+function spawnHalo(i,age){const H=halo.userData,P=halo.geometry.attributes.position.array;
+  const a=Math.random()*6.283,y=.15+Math.random()*1.15,rr=.04+Math.random()*.08;
+  P.set([Math.cos(a)*rr,y,Math.sin(a)*rr],i*3);const sp=.03+Math.random()*.08;
+  H.v.set([Math.cos(a)*sp,.04+Math.random()*.08,Math.sin(a)*sp],i*3);H.max[i]=2+Math.random()*3;H.life[i]=age*H.max[i];
+  halo.geometry.attributes.sz.array[i]=3+Math.random()*7;}
+for(let i=0;i<900;i++)spawnHalo(i,Math.random());
+// blast: cone of energy out of the triangle along +z
+
+// light burst: a beam of light out of the triangle + a starburst flare
+const beamMat=new THREE.ShaderMaterial({transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,side:THREE.DoubleSide,
+  uniforms:{uI:{value:0},uTime:U.uTime},
+  vertexShader:'varying vec2 vUv;varying vec3 vN,vV;void main(){vUv=uv;vec4 p=modelViewMatrix*vec4(position,1.);vN=normalize(normalMatrix*normal);vV=normalize(-p.xyz);gl_Position=projectionMatrix*p;}',
+  fragmentShader:`uniform float uI,uTime;varying vec2 vUv;varying vec3 vN,vV;
+    void main(){float along=1.-vUv.y;float edge=pow(abs(dot(vN,vV)),1.6);
+      float streak=.75+.25*sin(vUv.x*40.+uTime*6.)*sin(vUv.x*17.-uTime*3.);
+      float a=edge*pow(1.-along,1.4)*streak*uI;gl_FragColor=vec4(mix(vec3(.15,.7,1.),vec3(.9,1.,1.),edge*(1.-along))*a,1.);}`});
+const beam=new THREE.Mesh(new THREE.CylinderGeometry(.09,.7,4,48,1,true),beamMat);
+beam.geometry.translate(0,-2,0);beam.rotation.x=-Math.PI/2;beam.position.copy(MED);beam.frustumCulled=false;rig.add(beam);
+const fc=document.createElement('canvas');fc.width=fc.height=512;{const g=fc.getContext('2d'),c=256;
+  const rg=g.createRadialGradient(c,c,0,c,c,c);rg.addColorStop(0,'rgba(255,255,255,1)');rg.addColorStop(.08,'rgba(170,240,255,.9)');rg.addColorStop(.3,'rgba(40,170,255,.25)');rg.addColorStop(1,'rgba(0,0,0,0)');
+  g.fillStyle=rg;g.fillRect(0,0,512,512);g.globalCompositeOperation='lighter';
+  for(let k=0;k<14;k++){const a=k/14*Math.PI*2+(k%2)*.1,L=(k%2?150:250);g.save();g.translate(c,c);g.rotate(a);
+    const lg=g.createLinearGradient(0,0,L,0);lg.addColorStop(0,'rgba(200,250,255,.9)');lg.addColorStop(1,'rgba(0,120,255,0)');
+    g.fillStyle=lg;g.beginPath();g.moveTo(0,-5);g.lineTo(L,0);g.lineTo(0,5);g.fill();g.restore();}}
+const flare=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(fc),transparent:true,depthWrite:false,depthTest:false,blending:THREE.AdditiveBlending,opacity:0}));
+flare.position.copy(MED).add(new THREE.Vector3(0,0,.05));flare.renderOrder=9;rig.add(flare);
+let shine=0,shineT=9,oathT=[];const oath=document.getElementById('oath');
+function speak(){oathT.forEach(clearTimeout);oath.classList.remove('out');const L=[...oath.children];L.forEach(x=>x.classList.remove('on','gone'));
+  boomed=false;speechSynthesis&&speechSynthesis.cancel();clips.forEach(c=>{c.pause();});const run=++oathRun;
+  document.getElementById('oathT').classList.add('on');document.getElementById('oathBg').classList.add('on');
+  const step=i=>{if(run!==oathRun)return;if(i>=L.length){detonate();oathT.push(setTimeout(()=>{if(run!==oathRun)return;if(!oath.classList.contains('out')){oath.classList.add('out');scatter(L[L.length-1]);}document.getElementById('oathT').classList.remove('on');document.getElementById('oathBg').classList.remove('on');oathT.push(setTimeout(()=>{L.forEach(x=>x.classList.remove('on','gone'));oath.classList.remove('out');ringAuto=false;ringRest=true;ringFired=false;framing=false;ctl.autoRotate=true;},600));},5200));return;}
+    if(i>0){L[i-1].classList.remove('on');L[i-1].classList.add('gone');scatter(L[i-1]);}L[i].classList.add('on');gather(L[i]);if(i==L.length-1)oathT.push(setTimeout(detonate,Math.max(.6,(LEN[i]||4.5)-1.4)*1000));say(i,L[i].textContent,()=>oathT.push(setTimeout(()=>step(i+1),120)));};
+  oathT.push(setTimeout(()=>step(0),1900));}
+// voice: the most natural system voice available, read line by line
+let oathRun=0,voice=null;
+function pickVoice(){const vs=speechSynthesis.getVoices().filter(v=>/^en/i.test(v.lang));
+  const pref=[/natural/i,/premium/i,/enhanced/i,/siri/i,/google uk english male/i,/daniel/i,/google us english/i,/samantha/i,/alex/i];
+  for(const re of pref){const v=vs.find(v=>re.test(v.name));if(v)return v;}return vs[0]||null;}
+if('speechSynthesis' in window){voice=pickVoice();speechSynthesis.onvoiceschanged=()=>voice=pickVoice();}
+// Kokoro voice (af_nicole), pre-rendered per line; browser speech only as a fallback
+
+let actx=null,ana=null,abuf=null;
+// iOS mutes Web Audio under the silent switch but not media elements: on iOS, send every node into a
+// MediaStream played by a hidden <audio>, so effects and voice sound like video audio does
+const IOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+let _out=null,outEl=null;
+function audioOut(){if(window.OfflineAudioContext&&actx instanceof OfflineAudioContext)return actx.destination;if(_out)return _out;_out=actx.createGain();_out.connect(actx.destination);return _out;}
+function playOutEl(){if(outEl&&outEl.paused){const p=outEl.play();p&&p.catch(()=>{});}}
+function hookAudio(){if(actx)return;try{actx=new (window.AudioContext||window.webkitAudioContext)();ana=actx.createAnalyser();ana.fftSize=512;abuf=new Uint8Array(ana.fftSize);
+  ana.connect(audioOut());}catch(e){actx=null;}}
+function voiceLevel(){if(!ana)return 0;ana.getByteTimeDomainData(abuf);let s=0;for(let i=0;i<abuf.length;i++){const v=(abuf[i]-128)/128;s+=v*v;}return Math.sqrt(s/abuf.length);}
+// sound effects: synthesized on the voice's audio context
+let sfxBus=null,verb=null;
+function sfxReady2(){if(sfxBus)return;sfxBus=actx.createGain();sfxBus.gain.value=1.4;verb=actx.createConvolver();const len=actx.sampleRate*3.2,ir=actx.createBuffer(2,len,actx.sampleRate);
+  for(let c=0;c<2;c++){const d=ir.getChannelData(c);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,3.2);}verb.buffer=ir;const wet=actx.createGain();wet.gain.value=.45;sfxBus.connect(audioOut());sfxBus.connect(verb);verb.connect(wet);wet.connect(audioOut());}
+function sfxReady(){hookAudio();if(!actx)return false;if(!sfxBus){sfxBus=actx.createGain();sfxBus.gain.value=1.4;
+  verb=actx.createConvolver();const len=actx.sampleRate*3.2,ir=actx.createBuffer(2,len,actx.sampleRate);
+  for(let c=0;c<2;c++){const d=ir.getChannelData(c);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,3.2);}verb.buffer=ir;
+  const wet=actx.createGain();wet.gain.value=.45;sfxBus.connect(audioOut());sfxBus.connect(verb);verb.connect(wet);wet.connect(audioOut());}
+  actx.resume();return true;}
+const _nb={};function noiseBuf(sec){const k=Math.ceil(sec*2)/2;if(_nb[k])return _nb[k];const b=actx.createBuffer(1,Math.ceil(actx.sampleRate*k),actx.sampleRate),d=b.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;return _nb[k]=b;}
+function sfxCharge(sec,render){if(IOS&&!render&&playSfx('charge'))return;if(!render&&!sfxReady())return;if(render)sfxReady2();const t=actx.currentTime,end=t+sec;
+  // rushing energy: noise through two rising resonant bands
+  const n=actx.createBufferSource();n.buffer=noiseBuf(sec+.4);const ng=actx.createGain();
+  ng.gain.setValueAtTime(.0001,t);ng.gain.exponentialRampToValueAtTime(.5,end-.05);ng.gain.exponentialRampToValueAtTime(.0001,end+.25);
+  [[180,2600,7],[420,5200,4]].forEach(([f0,f1,q])=>{const f=actx.createBiquadFilter();f.type='bandpass';f.Q.value=q;f.frequency.setValueAtTime(f0,t);f.frequency.exponentialRampToValueAtTime(f1,end);n.connect(f);f.connect(ng);});
+  ng.connect(sfxBus);n.start(t);n.stop(end+.4);
+  // breathing hum: two detuned sines, tremolo that quickens with the charge
+  const hum=actx.createGain();hum.gain.setValueAtTime(.0001,t);hum.gain.exponentialRampToValueAtTime(.28,t+sec*.5);hum.gain.exponentialRampToValueAtTime(.4,end);hum.gain.exponentialRampToValueAtTime(.0001,end+.3);
+  const trem=actx.createGain();trem.gain.value=.6;const lfo=actx.createOscillator(),lg=actx.createGain();lfo.frequency.setValueAtTime(3,t);lfo.frequency.exponentialRampToValueAtTime(26,end);lg.gain.value=.4;lfo.connect(lg);lg.connect(trem.gain);
+  [55,55.7,110.4].forEach(f=>{const o=actx.createOscillator();o.type='sine';o.frequency.setValueAtTime(f,t);o.frequency.exponentialRampToValueAtTime(f*2.6,end);o.connect(trem);o.start(t);o.stop(end+.35);});
+  const lp=actx.createBiquadFilter();lp.type='lowpass';lp.frequency.value=900;trem.connect(lp);lp.connect(hum);hum.connect(sfxBus);lfo.start(t);lfo.stop(end+.35);
+  // soft rising whine with a little vibrato, like a capacitor filling
+  const w=actx.createOscillator(),wg=actx.createGain(),vib=actx.createOscillator(),vg=actx.createGain();w.type='sine';
+  w.frequency.setValueAtTime(260,t);w.frequency.exponentialRampToValueAtTime(1500,end);vib.frequency.value=7;vg.gain.value=9;vib.connect(vg);vg.connect(w.frequency);
+  wg.gain.setValueAtTime(.0001,t);wg.gain.exponentialRampToValueAtTime(.07,end-.05);wg.gain.exponentialRampToValueAtTime(.0001,end+.15);w.connect(wg);wg.connect(sfxBus);
+  w.start(t);vib.start(t);w.stop(end+.2);vib.stop(end+.2);}
+function sfxShine(render){if(IOS&&!render&&playSfx('shine'))return;if(!render&&!sfxReady())return;if(render)sfxReady2();const t=actx.currentTime;const n=actx.createBufferSource();n.buffer=noiseBuf(2.5);
+  const f=actx.createBiquadFilter();f.type='highpass';f.frequency.setValueAtTime(5000,t);f.frequency.exponentialRampToValueAtTime(600,t+1.8);
+  const g=actx.createGain();g.gain.setValueAtTime(.35,t);g.gain.exponentialRampToValueAtTime(.0001,t+2.3);n.connect(f);f.connect(g);g.connect(sfxBus);n.start(t);
+  const o=actx.createOscillator(),og=actx.createGain();o.frequency.setValueAtTime(880,t);o.frequency.exponentialRampToValueAtTime(1320,t+.4);og.gain.setValueAtTime(.12,t);og.gain.exponentialRampToValueAtTime(.0001,t+1.6);
+  o.connect(og);og.connect(sfxBus);o.start(t);o.stop(t+1.7);}
+// render the synthesized effects once, offline, into files the media path can play (iOS)
+const sfxEl={};
+function wavURL(buf){const n=buf.length,ch=buf.numberOfChannels,sr=buf.sampleRate,dv=new DataView(new ArrayBuffer(44+n*ch*2));let o=0;
+  const w=(t)=>{for(const c of t)dv.setUint8(o++,c.charCodeAt(0));},u32=v=>{dv.setUint32(o,v,true);o+=4;},u16=v=>{dv.setUint16(o,v,true);o+=2;};
+  w('RIFF');u32(36+n*ch*2);w('WAVE');w('fmt ');u32(16);u16(1);u16(ch);u32(sr);u32(sr*ch*2);u16(ch*2);u16(16);w('data');u32(n*ch*2);
+  const C=[...Array(ch)].map((_,i)=>buf.getChannelData(i));for(let i=0;i<n;i++)for(let c=0;c<ch;c++){const v=Math.max(-1,Math.min(1,C[c][i]));dv.setInt16(o,v<0?v*32768:v*32767,true);o+=2;}
+  return URL.createObjectURL(new Blob([dv],{type:'audio/wav'}));}
+async function renderSfx(name,fn,dur){if(!window.OfflineAudioContext||sfxEl[name])return;const live={actx,sfxBus,verb,nb:{..._nb}};
+  const off=new OfflineAudioContext(2,Math.ceil(44100*dur),44100);actx=off;sfxBus=null;verb=null;for(const k in _nb)delete _nb[k];
+  try{fn();}finally{actx=live.actx;sfxBus=live.sfxBus;verb=live.verb;for(const k in _nb)delete _nb[k];Object.assign(_nb,live.nb);}
+  const buf=await off.startRendering();const a=new Audio(wavURL(buf));a.preload='auto';sfxEl[name]=a;if(!gated)audTick();}
+function prerenderSfx(){renderSfx('charge',()=>sfxCharge(.75+CHD,true),.75+CHD+.6).then(()=>renderSfx('shine',()=>sfxShine(true),2.6)).then(()=>renderSfx('boom',()=>sfxBoom(true),5)).catch(()=>{});}
+function playSfx(name){const a=sfxEl[name];if(!a)return false;try{a._wanted=true;a.muted=false;a.currentTime=0;const p=a.play();p&&p.catch(()=>{});}catch(e){}return true;}
+window.__out=()=>({ios:IOS,sfx:Object.keys(sfxEl),state:actx&&actx.state});window.__sfx={charge:()=>sfxCharge(1.8),boom:()=>sfxBoom(),shine:()=>sfxShine(),state:()=>actx&&actx.state};
+function sfxBoom(render){if(IOS&&!render&&playSfx('boom'))return;if(!render&&!sfxReady())return;if(render)sfxReady2();const t=actx.currentTime;
+  // sub drop
+  const s1=actx.createOscillator(),sg=actx.createGain();s1.type='sine';s1.frequency.setValueAtTime(140,t);s1.frequency.exponentialRampToValueAtTime(28,t+2.4);
+  sg.gain.setValueAtTime(.0001,t);sg.gain.exponentialRampToValueAtTime(1,t+.02);sg.gain.exponentialRampToValueAtTime(.0001,t+3.6);s1.connect(sg);sg.connect(sfxBus);s1.start(t);s1.stop(t+3.7);
+  // body: noise through a falling lowpass
+  const n=actx.createBufferSource();n.buffer=noiseBuf(4);const f=actx.createBiquadFilter();f.type='lowpass';f.frequency.setValueAtTime(9000,t);f.frequency.exponentialRampToValueAtTime(120,t+3);
+  const g=actx.createGain();g.gain.setValueAtTime(.9,t);g.gain.exponentialRampToValueAtTime(.0001,t+3.8);n.connect(f);f.connect(g);g.connect(sfxBus);n.start(t);
+  // crack + shimmer tail
+  const c=actx.createBufferSource();c.buffer=noiseBuf(.25);const cg=actx.createGain();cg.gain.setValueAtTime(.8,t);cg.gain.exponentialRampToValueAtTime(.0001,t+.22);c.connect(cg);cg.connect(sfxBus);c.start(t);
+  [1760,2637,3520].forEach((fr,k)=>{const o=actx.createOscillator(),og=actx.createGain();o.frequency.value=fr;og.gain.setValueAtTime(.0001,t+.1);og.gain.exponentialRampToValueAtTime(.05,t+.4+k*.1);og.gain.exponentialRampToValueAtTime(.0001,t+4.5);o.connect(og);og.connect(sfxBus);o.start(t);o.stop(t+4.6);});
+  // duck the rest of the mix
+  const comp2=actx.createDynamicsCompressor();}
+// each line holds for at least its recording's length, so a refused or failed clip can never skip ahead
+let LEN=LANTERNS[LT].len.slice();
+// the clips are decoded once into the audio context: after the first tap unlocks it, playback needs no further gesture (Safari)
+let bufs=[];let bufsP=null;window.__bufsReady=()=>bufs.filter(Boolean).length===clips.length;
+function loadBufs(){if(bufsP||!actx||IOS)return;bufsP=Promise.all(clips.map((c,i)=>fetch(c.src).then(r=>r.arrayBuffer()).then(b=>new Promise((ok,no)=>actx.decodeAudioData(b,ok,no))).then(b=>{bufs[i]=b;}).catch(()=>{})));}
+function say(i,text,done,waited){hookAudio();actx&&actx.resume();loadBufs();
+  if(!IOS&&!bufs[i]&&bufsP&&!waited){Promise.race([bufsP,new Promise(r=>setTimeout(r,2500))]).then(()=>say(i,text,done,true));return;}const t0=performance.now(),min=(LEN[i]||2.5)*1000;let fin=false;
+  const end=()=>{if(fin)return;const left=min-(performance.now()-t0);if(left>60){setTimeout(end,left);return;}fin=true;done();};
+  const b=bufs[i];if(!IOS&&b&&actx&&actx.state==='running'){const src=actx.createBufferSource();src.buffer=b;src.connect(ana||audioOut());src.onended=end;src.start();setTimeout(end,b.duration*1000+600);return;}
+  const c=clips[i];if(c){c._wanted=true;c.muted=false;c.currentTime=0;c.onended=end;c.play().then(()=>setTimeout(end,(c.duration||LEN[i]||4)*1000+400)).catch(()=>speak2(text,end));setTimeout(end,min+1500);return;}
+  speak2(text,end);}
+function speak2(text,end){
+  if(!('speechSynthesis' in window)){setTimeout(end,1600);return;}
+  const u=new SpeechSynthesisUtterance(text);if(voice)u.voice=voice;u.rate=.86;u.pitch=.82;u.volume=1;u.onend=end;
+  speechSynthesis.speak(u);setTimeout(end,Math.max(2500,text.length*110));}
+// text dust: each line condenses out of drifting points, then the type settles in
+const dust=document.getElementById('dust'),dx=dust.getContext('2d');let motes=[];
+const DOT=document.createElement('canvas');DOT.width=DOT.height=6;{const g=DOT.getContext('2d'),gr=g.createRadialGradient(3,3,0,3,3,3);gr.addColorStop(0,'rgba(235,252,255,1)');gr.addColorStop(.4,'rgba(150,230,255,.8)');gr.addColorStop(1,'rgba(40,160,255,0)');g.fillStyle=gr;g.fillRect(0,0,6,6);}
+function sizeDust(){const d=Math.min(devicePixelRatio,2),w=innerWidth,h=innerHeight;dust.width=w*d;dust.height=h*d;dust.style.width=w+'px';dust.style.height=h+'px';dx.setTransform(d,0,0,d,0,0);}
+window.visualViewport&&visualViewport.addEventListener('resize',sizeDust);
+sizeDust();addEventListener('resize',sizeDust);
+function sample(el){const r=el.getBoundingClientRect(),cs=getComputedStyle(el),c=document.createElement('canvas');
+  c.width=Math.ceil(r.width);c.height=Math.ceil(r.height);const g=c.getContext('2d',{willReadFrequently:true});g.font=cs.fontWeight+' '+cs.fontSize+' '+cs.fontFamily;
+  g.letterSpacing=cs.letterSpacing;g.textAlign='center';g.textBaseline='middle';g.fillStyle='#fff';g.fillText(cs.textTransform=='uppercase'?el.textContent.toUpperCase():el.textContent,c.width/2,c.height/2);
+  const D=g.getImageData(0,0,c.width,c.height).data,pts=[];for(let y=0;y<c.height;y+=Q.txt)for(let x=0;x<c.width;x+=Q.txt)if(D[(y*c.width+x)*4+3]>110)pts.push([r.left+x,r.top+y]);return pts;}
+document.fonts&&document.fonts.load('400 20px Michroma');
+function gather(el){const R=el.getBoundingClientRect(),pts=sample(el),x0=pts.reduce((m,p)=>Math.min(m,p[0]),1e9),w=Math.max(1,pts.reduce((m,p)=>Math.max(m,p[0]),-1e9)-x0);pts.forEach(([x,y])=>{const a=Math.random()*6.283,d=40+Math.random()*140;
+  motes.push({x:x+Math.cos(a)*d,y:y+Math.sin(a)*d*.5,tx:x,ty:y,t:-((x-x0)/w)*1.3-Math.random()*.25,dur:.9+Math.random()*.4,mode:0});});}
+function scatter(el){const pts=sample(el),x0=pts.reduce((m,p)=>Math.min(m,p[0]),1e9),w=Math.max(1,pts.reduce((m,p)=>Math.max(m,p[0]),-1e9)-x0);pts.forEach(([x,y])=>{const a=Math.random()*6.283,v=20+Math.random()*80;
+  motes.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v*.5-25,t:-((x-x0)/w)*.9,dur:1.2+Math.random()*.8,mode:1});});}
+let dLast=performance.now(),dDirty=false;(function dloop(now){const dt=Math.min(.05,(now-dLast)/1000);dLast=now;
+  if(!motes.length){if(dDirty){dx.clearRect(0,0,innerWidth,innerHeight);dDirty=false;}requestAnimationFrame(dloop);return;}dDirty=true;
+  dx.clearRect(0,0,innerWidth,innerHeight);dx.globalCompositeOperation='lighter';
+  motes=motes.filter(m=>{m.t+=dt;if(m.t<0)return true;const k=Math.min(1,m.t/m.dur);let a;
+    if(m.mode==0){const e=1-Math.pow(1-k,3);const px=m.x+(m.tx-m.x)*e,py=m.y+(m.ty-m.y)*e;a=k<.8?k*1.2:Math.max(0,(1-k)*5+(.2));
+      if(m.t>m.dur+.6)return false;if(k>=1)a=Math.max(0,.9-(m.t-m.dur)*1.6);dx.globalAlpha=Math.min(1,a*1.4);dx.drawImage(DOT,px-3,py-3);}
+    else{m.x+=m.vx*dt;m.y+=m.vy*dt;a=1-k;dx.globalAlpha=a;dx.drawImage(DOT,m.x-3,m.y-3);if(k>=1)return false;}
+    return true;});dx.globalAlpha=1;requestAnimationFrame(dloop);})(dLast);
+function fire(){U.uBlast.value=1;shine=1;shineT=0;sfxShine();speak();}
+// charge-up: motes pulled into the triangle, then the light lets go
+const CH=500,chg=dotSet(CH);rig.add(chg);let chargeT=-1;const CHD=1.1;
+function charge(){if(chargeT>=0||shineT<2.2)return;chargeT=0;const P=chg.geometry.attributes.position.array,C=chg.userData,S=chg.geometry.attributes.sz.array;
+  for(let i=0;i<CH;i++){const u=Math.random()*2-1,a=Math.random()*6.283,r=.45+Math.random()*.9,q=Math.sqrt(1-u*u);
+    C.v.set([Math.cos(a)*q*r,u*r,Math.abs(Math.sin(a)*q)*r*.8+.05],i*3);C.life[i]=Math.random()*.45;C.max[i]=Math.random()*6.283;S[i]=4+Math.random()*9;}}
+function stepCharge(dt){chg.visible=chargeT>=0;if(chargeT<0)return;chargeT+=dt;const P=chg.geometry.attributes.position.array,A=chg.geometry.attributes.a.array,C=chg.userData;
+  for(let i=0;i<CH;i++){const k=Math.min(1,Math.max(0,(chargeT-C.life[i])/(CHD-C.life[i]))),e=k*k*k,sw=(1-e)*.6,ang=C.max[i]+k*2.5;
+    const ox=C.v[i*3],oy=C.v[i*3+1],oz=C.v[i*3+2],cx=Math.cos(sw*ang)*ox-Math.sin(sw*ang)*oy,cy=Math.sin(sw*ang)*ox+Math.cos(sw*ang)*oy;
+    P[i*3]=cx*(1-e);P[i*3+1]=MED.y+cy*(1-e);P[i*3+2]=MED.z+oz*(1-e);A[i]=chargeT<C.life[i]?0:Math.min(1,k*3)*(.4+e*.9);}
+  U.uBlast.value=Math.max(U.uBlast.value,Math.pow(Math.min(1,chargeT/CHD),2)*.6);
+  chg.geometry.attributes.position.needsUpdate=chg.geometry.attributes.a.needsUpdate=chg.geometry.attributes.sz.needsUpdate=true;
+  if(chargeT>=CHD){chargeT=-1;A.fill(0);chg.geometry.attributes.a.needsUpdate=true;fire();}}
+// pulsing triangle cue: says the centre is pressable
+const cue=new THREE.Group();cue.position.copy(MED).add(new THREE.Vector3(0,0,.005));rig.add(cue);
+const cueRings=[0,1].map(k=>{const m=new THREE.Mesh(new THREE.RingGeometry(.085,.093,3,1,-Math.PI/2),
+  new THREE.MeshBasicMaterial({color:0x7fe8ff,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending}));cue.add(m);return m;});
+const tv=new THREE.Vector3(),nv=new THREE.Vector3();
+function onTri(x,y){tv.copy(MED);rig.localToWorld(tv);nv.set(0,0,1).transformDirection(rig.matrixWorld);
+  if(nv.dot(tv.clone().sub(cam.position).negate())<=0)return false;           // triangle faces away
+  const e=tv.clone().add(new THREE.Vector3(.1,0,0));tv.project(cam);e.project(cam);
+  const rpx=Math.abs(e.x-tv.x)*innerWidth/2+8;return Math.hypot((tv.x+1)/2*innerWidth-x,(1-tv.y)/2*innerHeight-y)<rpx;}
+let down=null;
+r.domElement.addEventListener('pointerdown',e=>down=[e.clientX,e.clientY]);
+r.domElement.addEventListener('pointerup',e=>{if(down&&Math.hypot(e.clientX-down[0],e.clientY-down[1])<6&&onTri(e.clientX,e.clientY)&&!ringDrag&&pulseT<0&&chargeT<0&&!oathOn()){ringAuto=true;ringFired=false;ringEngaged=true;}});
+r.domElement.addEventListener('pointermove',e=>{r.domElement.style.cursor=onTri(e.clientX,e.clientY)?'pointer':'';});
+const tag=document.getElementById('tag');const oathOn=()=>!!document.querySelector('#oath span.on');
+const _tp=new THREE.Vector3(),_tn=new THREE.Vector3(),_tc=new THREE.Vector3();
+function placeTag(){const p=_tp.set(MED.x+.2,MED.y,MED.z);rig.localToWorld(p);const n=_tn.set(0,0,1).transformDirection(rig.matrixWorld);
+  const facing=n.dot(_tc.copy(cam.position).sub(p).normalize());p.project(cam);
+  tag.style.transform=`translate(${(p.x+1)/2*innerWidth+6}px,${(1-p.y)/2*innerHeight-14}px)`;
+  tag.style.opacity=facing>.35&&shineT>4&&chargeT<0&&pulseT<0&&near<.3&&!oathOn()?Math.min(1,(facing-.35)*3):0;}
+function stepDots(dt,T){
+  const H=halo.userData,P=halo.geometry.attributes.position.array,A=halo.geometry.attributes.a.array;
+  const HN=Q.halo;halo.geometry.setDrawRange(0,HN);for(let i=0;i<HN;i++){H.life[i]+=dt;if(H.life[i]>H.max[i]){spawnHalo(i,0);continue;}
+    const t=H.life[i]/H.max[i];for(let k=0;k<3;k++)P[i*3+k]+=H.v[i*3+k]*dt;{const x=P[i*3],z=P[i*3+2],rr=Math.hypot(x,z);if(rr>.24){P[i*3]*=.24/rr;P[i*3+2]*=.24/rr;H.v[i*3]*=-.5;H.v[i*3+2]*=-.5;}if(P[i*3+1]>1.32)H.life[i]=H.max[i];}A[i]=Math.sin(t*Math.PI)*.55;}
+  halo.geometry.attributes.position.needsUpdate=halo.geometry.attributes.a.needsUpdate=halo.geometry.attributes.sz.needsUpdate=true;
+  
+  shineT+=dt;beam.visible=flare.visible=shine>0;shine=shineT<1.5?1:Math.max(0,1-(shineT-1.5)*1.4);const e=shine*shine*(3-2*shine)*Math.min(1,shineT*6);
+  beamMat.uniforms.uI.value=e*1.6;beam.scale.set(1,.35+.65*Math.min(1,shineT*4),1);
+  flare.material.opacity=e;flare.scale.setScalar(.4+e*1.8+Math.sin(T*20)*.04*e);flare.material.rotation=T*.15;
+  U.uBlast.value=Math.max(U.uBlast.value*.0,e);bloom.strength=.5+e*.9;}
+
+// lantern-shaped shell: the silhouette pushed outward, as a dotted skin with a faint net
+const outlines=[];let speakGlow=0;const C_W=new THREE.Color(0xdde6f2),C_B=new THREE.Color(0x4fc3ff);
+const shell=new THREE.Group();scene.add(shell);window.__shell=shell;window.__scene=scene;
+{const M=.035,prof=[[0,-.04],[.3,-.035],[.37,.02],[.375,.1],[.31,.32],[.36,.62],[.31,.95],[.37,1.25],[.395,1.36],[.24,1.56],[.17,1.64],[0,1.67]]
+    .map(([r,y])=>new THREE.Vector2(r>0?r+M:0,y));
+  const curve=new THREE.SplineCurve(prof);
+  // close-fitting wireframe cage: meridians + latitude rings
+  const lat=new THREE.LatheGeometry(curve.getPoints(40),28);
+  const wire=new THREE.LineSegments(new THREE.WireframeGeometry(lat),new THREE.LineBasicMaterial({color:0xb8d4e0,transparent:true,opacity:.06,depthWrite:false,blending:THREE.AdditiveBlending}));shell.add(wire);
+  // silhouette contours, stepped outward
+  [[0,.3],[.025,.16],[.055,.08],[.09,.04]].forEach(([d,o])=>{const c2=new THREE.SplineCurve(prof.map(v=>new THREE.Vector2(v.x?v.x+d:0,v.y+(v.x?0:(v.y>1?d:-d))))).getPoints(220);
+    const arr=[];c2.forEach(v=>arr.push(v.x,v.y,0));for(let i=c2.length-1;i>=0;i--)arr.push(-c2[i].x,c2[i].y,0);
+    const lg=new THREE.BufferGeometry();lg.setAttribute('position',new THREE.Float32BufferAttribute(arr,3));
+    const ln=new THREE.LineLoop(lg,new THREE.LineBasicMaterial({color:0xdde6f2,transparent:true,opacity:o,depthWrite:false,blending:THREE.AdditiveBlending}));ln.userData.face=1;shell.add(ln);});
+  // handle: its own loop outline, inside and out, so the opening stays open
+  const H=[[.13,1.66],[.2,1.74],[.33,1.9],[.37,1.98],[.3,2.03],[0,2.035]];
+  const loop=k=>{const half=H.map(([x,y])=>new THREE.Vector2(x,y));const full=[...half,...half.slice(0,-1).reverse().map(v=>new THREE.Vector2(-v.x,v.y))];
+    const c=new THREE.SplineCurve(full).getPoints(160),cx=0,cy=1.86;
+    return c.map(v=>{const dx=v.x-cx,dy=v.y-cy,l=Math.hypot(dx,dy)||1;return new THREE.Vector3(v.x+dx/l*k,v.y+dy/l*k,0);});};
+  [[.05,.28],[.08,.12],[-.045,.2]].forEach(([k,o])=>{const g=new THREE.BufferGeometry().setFromPoints(loop(k));
+    const hl=new THREE.Line(g,new THREE.LineBasicMaterial({color:0xdde6f2,transparent:true,opacity:o,depthWrite:false,blending:THREE.AdditiveBlending}));rig.add(hl);outlines.push(hl);});}
+
+// orbital wheel under the lantern: concentric rings, partial arcs, ticks, riders, a vertical axis
+const wheel=new THREE.Group();wheel.position.y=-.6;wheel.rotation.set(-.12,0,.08);scene.add(wheel);
+// voice glow on the base: an orb-style pool of light that swells with each word, ripples running outward while the oath is spoken
+const uTalk={value:0};
+{const m=new THREE.ShaderMaterial({uniforms:{uTime:U.uTime,uV:U.uVoice,uT:uTalk},transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,side:THREE.DoubleSide,
+  vertexShader:'varying vec2 vU;void main(){vU=uv*2.-1.;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
+  fragmentShader:'uniform float uTime,uV,uT;varying vec2 vU;void main(){float r=length(vU);if(r>1.)discard;float e=smoothstep(1.,.75,r);'+
+   'float pool=exp(-r*r*(9.-uV*5.))*(.35+uV*1.1);'+
+   'float rip=0.;for(int i=0;i<4;i++){float ph=fract(uTime*.45+float(i)*.25);float d=abs(r-ph*.95);rip+=smoothstep(.035,0.,d)*(1.-ph)*(.25+uV*.9);}'+
+   'float halo=smoothstep(.06,0.,abs(r-(.16+uV*.12)))*(.3+uV);'+
+   'float a=(pool+rip+halo)*uT*e;gl_FragColor=vec4(vec3(.36,.85,1.)*a+vec3(.9,1.,1.)*pool*pool*uT*.4,a);}'});
+ const g=new THREE.Mesh(new THREE.CircleGeometry(2.8,96),m);g.rotation.x=-Math.PI/2;g.position.y=.004;g.renderOrder=2;wheel.add(g);}
+{const L=(o)=>new THREE.LineBasicMaterial({color:0xd8dee8,transparent:true,opacity:o,depthWrite:false,blending:THREE.AdditiveBlending});
+  const arc=(R,a0,a1,o,dash)=>{const pts=[],n=Math.max(8,Math.round((a1-a0)*R*60));for(let i=0;i<=n;i++){const a=a0+(a1-a0)*i/n;pts.push(new THREE.Vector3(Math.cos(a)*R,0,Math.sin(a)*R));}
+    const g=new THREE.BufferGeometry().setFromPoints(pts);const m=dash?new THREE.LineDashedMaterial({color:0xd8dee8,dashSize:.03,gapSize:.05,transparent:true,opacity:o,depthWrite:false,blending:THREE.AdditiveBlending}):L(o);
+    const l=new THREE.Line(g,m);if(dash)l.computeLineDistances();return l;};
+  const layers=[];
+  const spec=[[.55,.5,1,0],[.72,.3,0,1],[.9,.45,1,0],[1.05,.18,0,1],[1.28,.4,1,0],[1.5,.22,0,1],[1.85,.32,1,0],[2.3,.16,0,1],[2.6,.25,1,0]];
+  spec.forEach(([R,o,full,dash],i)=>{const grp=new THREE.Group();
+    if(full)grp.add(arc(R,0,Math.PI*2,o,false));
+    else{for(let k=0;k<3;k++){const a=Math.random()*6.28;grp.add(arc(R,a,a+.6+Math.random()*1.4,o,!!dash));}}
+    // ticks
+    if(i%2==0){const tp=[];const n=Math.round(R*40);for(let k=0;k<n;k++){const a=k/n*6.283,t=k%5?.025:.06;tp.push(Math.cos(a)*R,0,Math.sin(a)*R,Math.cos(a)*(R+t),0,Math.sin(a)*(R+t));}
+      const tg=new THREE.BufferGeometry();tg.setAttribute('position',new THREE.Float32BufferAttribute(tp,3));grp.add(new THREE.LineSegments(tg,L(o*.6)));}
+    // riders
+    if(i%3==1){const b=new THREE.Mesh(new THREE.SphereGeometry(.025+Math.random()*.02,16,12),new THREE.MeshStandardMaterial({color:0x101114,metalness:.9,roughness:.25,emissive:0x0}));
+      const a=Math.random()*6.28;b.position.set(Math.cos(a)*R,0,Math.sin(a)*R);grp.add(b);}
+    grp.userData.spin=(i%2?-1:1)*(.02+Math.random()*.06);wheel.add(grp);layers.push(grp);});
+  // translucent dark band, like a lens shadow on one side of the disc
+  const band=new THREE.Mesh(new THREE.RingGeometry(1.32,1.7,128,1,.4,2.2),new THREE.MeshBasicMaterial({color:0x8a94a6,transparent:true,opacity:.07,side:THREE.DoubleSide,depthWrite:false}));
+  band.rotation.x=-Math.PI/2;wheel.add(band);layers.push(band);band.userData.spin=.015;
+  // spokes and the vertical axis through the lantern
+  const sp=[];for(let k=0;k<6;k++){const a=k/6*6.283+.3;sp.push(Math.cos(a)*.6,0,Math.sin(a)*.6,Math.cos(a)*2.7,0,Math.sin(a)*2.7);}
+  const sg=new THREE.BufferGeometry();sg.setAttribute('position',new THREE.Float32BufferAttribute(sp,3));const spokes=new THREE.LineSegments(sg,L(.08));spokes.userData.spin=-.01;wheel.add(spokes);layers.push(spokes);
+  const ax=new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0,-1.8,0),new THREE.Vector3(0,-.05,0)]);wheel.add(new THREE.Line(ax,L(.35)));
+  [-.6,-1.1,-1.5].forEach(y=>{const d=new THREE.Mesh(new THREE.SphereGeometry(.012,8,6),new THREE.MeshBasicMaterial({color:0xd8dee8}));d.position.y=y;wheel.add(d);});
+  // scattered specks on the disc
+  const N=500,pp=new Float32Array(N*3);for(let k=0;k<N;k++){const a=Math.random()*6.283,R=.5+Math.pow(Math.random(),.7)*2.2;pp.set([Math.cos(a)*R,(Math.random()-.5)*.03,Math.sin(a)*R],k*3);}
+  const pg=new THREE.BufferGeometry();pg.setAttribute('position',new THREE.BufferAttribute(pp,3));
+  const specks=new THREE.Points(pg,new THREE.PointsMaterial({color:0xd8dee8,size:.012,transparent:true,opacity:.5,depthWrite:false,blending:THREE.AdditiveBlending}));specks.userData.spin=.03;wheel.add(specks);layers.push(specks);
+  // circuit dendrogram: stepped arcs on concentric tracks, radial taps between them, nodes at every end
+  {const seg=[],dots=[],P=(R,a)=>[Math.cos(a)*R,0,Math.sin(a)*R];let seed=7;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+   const tracks=[];for(let R=.7;R<2.7;R+=.075+rnd()*.05)tracks.push(R);
+   tracks.forEach((R,ti)=>{let a=rnd()*6.283;const n=3+Math.floor(rnd()*5);
+     for(let k=0;k<n;k++){const len=.12+rnd()*(.9/Math.sqrt(R));const a0=a,a1=a+len,steps=Math.max(3,Math.round(len*R*30));
+       for(let j=0;j<steps;j++){seg.push(...P(R,a0+(a1-a0)*j/steps),...P(R,a0+(a1-a0)*(j+1)/steps));}
+       dots.push(...P(R,a0),...P(R,a1));
+       // radial taps out to the next track or two
+       const taps=1+Math.floor(rnd()*3);for(let q=0;q<taps;q++){const at=a0+(a1-a0)*rnd(),R2=tracks[Math.min(tracks.length-1,ti+1+Math.floor(rnd()*2))];
+         if(R2>R){seg.push(...P(R,at),...P(R2,at));dots.push(...P(R2,at));}}
+       a=a1+.08+rnd()*.9;}});
+   const sg2=new THREE.BufferGeometry();sg2.setAttribute('position',new THREE.Float32BufferAttribute(seg,3));
+   const circ=new THREE.LineSegments(sg2,L(.22));circ.userData.spin=.012;wheel.add(circ);layers.push(circ);
+   const dg=new THREE.BufferGeometry();dg.setAttribute('position',new THREE.Float32BufferAttribute(dots,3));
+   const nodes=new THREE.Points(dg,new THREE.PointsMaterial({color:0xe6f4ff,size:.028,transparent:true,opacity:.75,depthWrite:false,blending:THREE.AdditiveBlending}));
+   nodes.userData.spin=.012;wheel.add(nodes);layers.push(nodes);}
+  wheel.userData.layers=layers;}
+
+// the ring: floats front and centre; drag it toward the medallion and the lantern answers
+const ringG=new THREE.Group();ringG.position.set(0,-.05,2.4);scene.add(ringG);const ringPivot=new THREE.Group();ringG.add(ringPivot);
+const rtag=document.getElementById('rtag');const _pa=new THREE.Vector3(),_pb=new THREE.Vector3();const CAM_HOME=new THREE.Vector3(0,1.9,8.6),TGT_HOME=new THREE.Vector3(0,1.15,0),_cv=new THREE.Vector3();let framing=false,ringEngaged=false,ringRest=false,ringAuto=false,pulseT=-1,pulsePh=0,ringAim=0,ringFired=false,ringMat=null,ringDrag=false,ringHome=ringG.position.clone(),near=0;const ringR=.26;
+// rings: one per lantern, loaded on demand, only the active one visible
+const ringBody=new THREE.Group();ringPivot.add(ringBody);const ringModels={},ringMats={};let activeRing=null;
+function showRing(f){activeRing=f;for(const k in ringModels)ringModels[k].visible=(k===f);ringMat=ringMats[f]||null;}
+function loadRing(f,cb){if(ringModels[f]||loadRing[f]){cb&&cb();return;}loadRing[f]=1;
+  new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).load(f,g=>{const m=g.scene,b=new THREE.Box3().setFromObject(m),c=b.getCenter(new THREE.Vector3()),sc=.42/(b.max.y-b.min.y);
+    m.scale.setScalar(sc);m.position.copy(c).multiplyScalar(-sc);let mat=null;
+    m.traverse(o=>{if(!o.isMesh)return;const om=o.material;mat=new THREE.MeshPhysicalMaterial({map:om.map,normalMap:om.normalMap,roughnessMap:om.roughnessMap,metalnessMap:om.metalnessMap,
+      roughness:om.roughness,metalness:om.metalness,clearcoat:.4,emissive:new THREE.Color(0x2fb8ff),emissiveIntensity:.02});o.material=mat;});
+    ringModels[f]=m;ringMats[f]=mat;ringBody.add(m);showRing(activeRing||f);cb&&cb();},e=>cb&&progress('ring',e));}
+activeRing=LANTERNS[LT].ring;loadRing(activeRing,partReady);
+setTimeout(()=>Object.values(LANTERNS).forEach(d=>{loadRing(d.ring);loadBody(d.body);}),4000);   // warm the other ring after first paint
+const ringLight=new THREE.PointLight(0x4fc3ff,0,1.6,2);ringG.add(ringLight);
+const medW=new THREE.Vector3(),rq=new THREE.Quaternion(),UP=new THREE.Vector3(0,1,0),dragPlane=new THREE.Plane(),hitP=new THREE.Vector3(),rayR=new THREE.Raycaster(),pr=new THREE.Vector2();
+function ringHit(x,y){const p=ringG.position.clone().project(cam),e=ringG.position.clone().add(new THREE.Vector3(ringR,0,0)).project(cam);
+  const rpx=Math.abs(e.x-p.x)*innerWidth/2+14;return Math.hypot((p.x+1)/2*innerWidth-x,(1-p.y)/2*innerHeight-y)<rpx;}
+r.domElement.addEventListener('pointerdown',e=>{if(!ringHit(e.clientX,e.clientY))return;ringDrag=true;ringAuto=false;ringRest=false;ringEngaged=true;ctl.enabled=false;
+  dragPlane.setFromNormalAndCoplanarPoint(cam.getWorldDirection(new THREE.Vector3()).negate(),ringG.position);r.domElement.style.cursor='grabbing';},true);
+addEventListener('pointermove',e=>{if(!ringDrag){if(ringHit(e.clientX,e.clientY))r.domElement.style.cursor='grab';return;}
+  pr.set(e.clientX/innerWidth*2-1,-e.clientY/innerHeight*2+1);rayR.setFromCamera(pr,cam);if(rayR.ray.intersectPlane(dragPlane,hitP))ringG.position.lerp(hitP,.6);});
+addEventListener('pointerup',()=>{if(ringDrag){ringDrag=false;ctl.enabled=true;r.domElement.style.cursor='';if(near<.75)ringRest=true;}});
+
+// charging into the ring: inward motes + contracting light rings, faster as the pulse quickens
+const RC=420,rch=dotSet(RC);scene.add(rch);const rchA=rch.geometry.attributes,rchV=new Float32Array(RC*3);
+function rchSpawn(i){const u=Math.random()*2-1,a=Math.random()*6.283,q=Math.sqrt(1-u*u),R=1.1+Math.random()*1.3;
+  rchV.set([Math.cos(a)*q*R,u*R,Math.sin(a)*q*R],i*3);rch.userData.life[i]=0;rch.userData.max[i]=.8+Math.random()*.9;rchA.sz.array[i]=3+Math.random()*8;}
+for(let i=0;i<RC;i++){rchSpawn(i);rch.userData.life[i]=Math.random()*rch.userData.max[i];}
+const waves=[0,1,2].map(()=>{const m=new THREE.Mesh(new THREE.RingGeometry(.97,1,96),new THREE.MeshBasicMaterial({color:0x7fe8ff,transparent:true,opacity:0,depthWrite:false,blending:THREE.AdditiveBlending,side:THREE.DoubleSide}));scene.add(m);return m;});
+const _f=new THREE.Vector3();function ringFront(){return _f.set(0,.13,0).applyQuaternion(ringPivot.quaternion).add(ringG.position);}
+const oc=document.createElement('canvas');oc.width=oc.height=128;{const g=oc.getContext('2d'),gr=g.createRadialGradient(64,64,0,64,64,64);gr.addColorStop(0,'rgba(255,255,255,1)');gr.addColorStop(.2,'rgba(160,240,255,.9)');gr.addColorStop(.5,'rgba(40,170,255,.3)');gr.addColorStop(1,'rgba(0,0,0,0)');g.fillStyle=gr;g.fillRect(0,0,128,128);}
+const orb=new THREE.Mesh(new THREE.PlaneGeometry(1,1),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(oc),transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,opacity:0}));scene.add(orb);
+function stepRingFx(dt){const on=pulseT>=0,k=on?Math.min(1,pulseT/.75):0;rch.userData.k=(rch.userData.k||0)+((on?1:0)-(rch.userData.k||0))*Math.min(1,dt*4);const vis=rch.userData.k;
+  const fp=ringFront();if(vis<.005&&!on){if(rch.visible){rch.visible=false;orb.visible=false;waves.forEach(w=>w.visible=false);}return;}
+  if(!rch.visible){rch.visible=orb.visible=true;waves.forEach(w=>w.visible=true);}
+  const P=rchA.position.array,A=rchA.a.array,sp=3.6+k*6,RN=Q.rch;rch.geometry.setDrawRange(0,RN);
+  for(let i=0;i<RN;i++){const L=rch.userData.life;L[i]+=dt*sp;if(L[i]>rch.userData.max[i])rchSpawn(i);const f=L[i]/rch.userData.max[i],e=1-f*f*f;
+    P[i*3]=fp.x+rchV[i*3]*e;P[i*3+1]=fp.y+rchV[i*3+1]*e;P[i*3+2]=fp.z+rchV[i*3+2]*e;A[i]=vis*Math.min(1,f*3)*(1-Math.pow(f,8))*(.5+k*.8);}
+  orb.position.copy(fp);orb.quaternion.copy(cam.quaternion);orb.scale.setScalar(.04+vis*(.06+k*.22)*(.85+.15*Math.sin(pulsePh)));orb.material.opacity=vis*(.5+k*.5);
+  rchA.position.needsUpdate=rchA.a.needsUpdate=rchA.sz.needsUpdate=true;
+  waves.forEach((w,j)=>{const ph=((pulsePh/6.283)+j/3)%1;w.position.copy(fp);w.quaternion.copy(cam.quaternion);
+    w.scale.setScalar(.12+(1-ph)*(.7-k*.25));w.material.opacity=vis*ph*(.25+k*.5);});}
+
+// climax: a full energy detonation on "future's light"
+const BN=3200,boomP=dotSet(BN);scene.add(boomP);boomP.visible=false;const BV=new Float32Array(BN*3);let boomT=-1;
+const shocks=[0,1,2,3].map(i=>{const m=new THREE.Mesh(new THREE.RingGeometry(.92,1,128),new THREE.MeshBasicMaterial({color:i?0x7fe8ff:0xffffff,transparent:true,opacity:0,depthWrite:false,blending:THREE.AdditiveBlending,side:THREE.DoubleSide}));m.visible=false;scene.add(m);return m;});
+const nova=new THREE.Mesh(new THREE.SphereGeometry(1,32,16),new THREE.MeshBasicMaterial({color:0x8fefff,transparent:true,opacity:0,depthWrite:false,blending:THREE.AdditiveBlending}));nova.visible=false;scene.add(nova);
+const flashEl=document.getElementById('flash');const _sh=new THREE.Vector3(),_bc=new THREE.Vector3();
+let boomed=false;const ringVel=new THREE.Vector3();let ringSpin=0,ringFly=0;const _bc0=()=>{const v=MED.clone();rig.localToWorld(v);return v;};function detonate(){if(boomed)return;boomed=true;inhale=.07;}
+let inhale=-1;function boomNow(){boomT=0;
+  {const L=[...oath.children],cur=L.find(x=>x.classList.contains('on'));if(cur){scatter(cur);}oath.classList.add('out');
+   document.getElementById('oathT').classList.remove('on');document.getElementById('oathBg').classList.remove('on');}
+  ringAuto=false;ringRest=true;ringFired=true;
+  {const away=ringG.position.clone().sub(_bc0()).setY(0);if(away.lengthSq()<1e-4)away.set(0,0,1);away.normalize();
+   ringVel.copy(away.multiplyScalar(7)).add(new THREE.Vector3((Math.random()-.5)*2,3.2,0));ringSpin=14;ringFly=.9;}const n=Math.min(BN,Math.round(Q.halo*3.5));boomP.geometry.setDrawRange(0,n);boomP.visible=true;
+  _bc.copy(MED);rig.localToWorld(_bc);const P=boomP.geometry.attributes.position.array,S=boomP.geometry.attributes.sz.array;
+  for(let i=0;i<n;i++){const u=Math.random()*2-1,a=Math.random()*6.283,q=Math.sqrt(1-u*u),v=2.5+Math.pow(Math.random(),.5)*13;
+    BV.set([Math.cos(a)*q*v,u*v*.75,Math.sin(a)*q*v],i*3);P.set([_bc.x,_bc.y,_bc.z],i*3);boomP.userData.life[i]=0;boomP.userData.max[i]=2+Math.random()*3;S[i]=10+Math.random()*34;}
+  shocks.forEach(m=>{m.visible=true;m.position.copy(_bc);});nova.visible=true;nova.position.copy(_bc);
+  const sp=_bc.clone().project(cam),ball=flashEl.firstElementChild;ball.style.left=((sp.x+1)/2*innerWidth)+'px';ball.style.top=((1-sp.y)/2*innerHeight)+'px';
+  const big=Math.hypot(innerWidth,innerHeight)/10*1.25;
+  flashEl.getAnimations().forEach(a=>a.cancel());ball.getAnimations().forEach(a=>a.cancel());
+  ball.animate([{transform:'scale(0)'},{transform:'scale('+big*.35+')',offset:.25},{transform:'scale('+big+')'}],{duration:650,easing:'cubic-bezier(.2,.7,.3,1)',fill:'forwards'});
+  flashEl.animate([{opacity:1},{opacity:1,offset:.28},{opacity:.75,offset:.42},{opacity:.3,offset:.68},{opacity:0}],{duration:5000,easing:'ease-out'});
+  exposureKick=1;sfxBoom();
+  shine=1;shineT=0;U.uBlast.value=1;}
+function stepBoom(dt){
+  if(inhale>0){inhale-=dt;const k=1-inhale/.07;r.toneMappingExposure=.75*(1-.55*k);U.uBlast.value=Math.max(0,1-k)*.3;bloom.strength=.3;
+    if(inhale<=0){inhale=-1;boomNow();}return;}
+  if(boomT<0)return;boomT+=dt;const T=boomT,n=boomP.geometry.drawRange.count,P=boomP.geometry.attributes.position.array,A=boomP.geometry.attributes.a.array,L=boomP.userData;
+  const drag=Math.exp(-dt*1.6);for(let i=0;i<n;i++){L.life[i]+=dt;const f=L.life[i]/L.max[i];if(f>=1){A[i]=0;continue;}
+    BV[i*3]*=drag;BV[i*3+1]=BV[i*3+1]*drag-dt*.35;BV[i*3+2]*=drag;P[i*3]+=BV[i*3]*dt;P[i*3+1]+=BV[i*3+1]*dt;P[i*3+2]+=BV[i*3+2]*dt;A[i]=(1-f)*(1-f)*1.6;}
+  boomP.geometry.attributes.position.needsUpdate=boomP.geometry.attributes.a.needsUpdate=boomP.geometry.attributes.sz.needsUpdate=true;
+  shocks.forEach((m,i)=>{const t=Math.max(0,T-i*.16),e=1-Math.pow(1-Math.min(1,t/1.8),3);if(i==3){m.quaternion.setFromEuler(new THREE.Euler(-Math.PI/2,0,0));}else m.quaternion.copy(cam.quaternion);m.scale.setScalar(.2+e*(12+i*4));m.material.opacity=Math.max(0,1-t/1.8)*(i?.55:.9);});
+  {const e=Math.min(1,T/.6);nova.scale.setScalar(.3+e*9);nova.material.opacity=Math.max(0,1-T/1.8);nova.material.color.setRGB(1,1,1);}
+  bloom.strength=Math.max(bloom.strength,.5+Math.max(0,2.2*(1-T/2.2)));U.uBlast.value=Math.max(U.uBlast.value,Math.max(0,1-T/2.5));
+  const amp=Math.max(0,.16*(1-T/1.2));_sh.set((Math.random()-.5)*amp,(Math.random()-.5)*amp,0);
+  if(T>5.5){boomT=-1;boomP.visible=nova.visible=false;shocks.forEach(m=>m.visible=false);}}
+
+// ring trail: a faint fading ribbon of recent positions, plus a few sparks
+const TRN=48,trPos=new Float32Array(TRN*3),trCol=new Float32Array(TRN*3),trG=new THREE.BufferGeometry();
+trG.setAttribute('position',new THREE.BufferAttribute(trPos,3));trG.setAttribute('color',new THREE.BufferAttribute(trCol,3));
+const trail=new THREE.Line(trG,new THREE.LineBasicMaterial({vertexColors:true,transparent:true,opacity:.9,depthWrite:false,blending:THREE.AdditiveBlending}));trail.frustumCulled=false;scene.add(trail);
+const trSp=dotSet(60);scene.add(trSp);let trSi=0;const _lastRing=new THREE.Vector3();let ringSpeed=0,trInit=false;
+function stepTrail(dt){const p=ringG.position;if(!trInit){for(let i=0;i<TRN;i++)trPos.set([p.x,p.y,p.z],i*3);_lastRing.copy(p);trInit=true;}
+  const v=p.distanceTo(_lastRing)/Math.max(dt,1e-3);_lastRing.copy(p);ringSpeed+=(v-ringSpeed)*Math.min(1,dt*10);
+  trPos.copyWithin(3,0,(TRN-1)*3);trPos[0]=p.x;trPos[1]=p.y;trPos[2]=p.z;
+  const k=Math.min(1,ringSpeed/1.1);for(let i=0;i<TRN;i++){const f=Math.pow(1-i/TRN,1.3)*k;trCol[i*3]=.35*f;trCol[i*3+1]=.85*f;trCol[i*3+2]=f;}
+  trG.attributes.position.needsUpdate=trG.attributes.color.needsUpdate=true;
+  // sparks shed while moving
+  const S=trSp.userData,P=trSp.geometry.attributes.position.array,A=trSp.geometry.attributes.a.array,Z=trSp.geometry.attributes.sz.array;
+  if(k>.15&&Math.random()<k*.9){const i=trSi;trSi=(trSi+1)%60;P.set([p.x+(Math.random()-.5)*.12,p.y+(Math.random()-.5)*.12,p.z+(Math.random()-.5)*.12],i*3);S.life[i]=0;S.max[i]=.5+Math.random()*.6;Z[i]=3+Math.random()*6;}
+  for(let i=0;i<60;i++){if(S.life[i]>=S.max[i]){A[i]=0;continue;}S.life[i]+=dt;P[i*3+1]+=dt*.12;A[i]=(1-S.life[i]/S.max[i])*.7;}
+  trSp.geometry.attributes.position.needsUpdate=trSp.geometry.attributes.a.needsUpdate=trSp.geometry.attributes.sz.needsUpdate=true;
+  moveHum(Math.min(1,ringSpeed/3),near);}
+// move sound: an airy whoosh + soft energy hum that follow the ring's speed (and brighten near the medallion)
+let mh=null;
+function moveHum(sp,nr){if(!actx||actx.state!=='running'||!sfxReady())return;const t=actx.currentTime;
+  if(!mh){const n=actx.createBufferSource();n.buffer=noiseBuf(2);n.loop=true;const bp=actx.createBiquadFilter();bp.type='bandpass';bp.Q.value=1.4;const ng=actx.createGain();ng.gain.value=0;
+    const o=actx.createOscillator(),o2=actx.createOscillator();o.type='sine';o2.type='sine';o.frequency.value=110;o2.frequency.value=165.5;const lp=actx.createBiquadFilter();lp.type='lowpass';lp.frequency.value=700;const og=actx.createGain();og.gain.value=0;
+    n.connect(bp);bp.connect(ng);ng.connect(sfxBus);o.connect(lp);o2.connect(lp);lp.connect(og);og.connect(sfxBus);n.start();o.start();o2.start();mh={bp,ng,o,o2,og};}
+  const live=ringDrag||ringFly>0||ringAuto?1:0,a=sp*live;
+  mh.ng.gain.setTargetAtTime(a*.22,t,.06);mh.bp.frequency.setTargetAtTime(400+a*2600+nr*1200,t,.08);
+  mh.og.gain.setTargetAtTime(Math.min(.16,(a*.12+nr*.08)*live+(ringDrag?.03:0)),t,.1);mh.o.frequency.setTargetAtTime(110+a*90+nr*120,t,.1);mh.o2.frequency.setTargetAtTime(165.5+a*140+nr*180,t,.1);}
+function stepRing(dt,t){medW.copy(MED);rig.localToWorld(medW);
+  if(ringFly>0&&!ringDrag){ringFly-=dt;if(ringFly<=0)ringVel.set(0,0,0);ringG.position.addScaledVector(ringVel,dt);ringVel.multiplyScalar(Math.exp(-dt*2.6));ringVel.y-=dt*1.2;ringSpin*=Math.exp(-dt*1.5);ringPivot.rotateX(ringSpin*dt);}
+  else if(ringRest&&!ringDrag){ringG.position.lerp(ringHome,Math.min(1,dt*1.6));if(ringG.position.distanceTo(ringHome)<.08){ringRest=false;ringEngaged=false;}}
+  else if(ringAuto&&!ringDrag)ringG.position.lerp(medW.clone().add(new THREE.Vector3(0,0,.24*LS).applyQuaternion(rig.quaternion)),Math.min(1,dt*2.2));
+  else if(!ringDrag){ringHome.y=-.05+Math.sin(t*1.1)*.06;ringG.position.lerp(near>.75?ringG.position:ringHome,Math.min(1,dt*.6));}
+  // pull in once close, like a magnet catching
+  const pa=_pa.copy(ringG.position).project(cam),pb=_pb.copy(medW).project(cam),asp=innerWidth/innerHeight,ds=Math.hypot((pa.x-pb.x)*asp,pa.y-pb.y);
+  near=(ringRest||!ringEngaged)?0:THREE.MathUtils.smoothstep(.42-ds,0,.34);
+  if(!ringDrag&&near>.75)ringG.position.lerp(medW.clone().add(new THREE.Vector3(0,0,.24*LS).applyQuaternion(rig.quaternion)),Math.min(1,dt*2.5));
+  ringAim+=(((ringDrag||near>.08)?1:0)-ringAim)*Math.min(1,dt*3);
+  const toMed=medW.clone().sub(ringG.position).normalize(),toCam=cam.position.clone().sub(ringG.position).normalize();
+  toCam.applyAxisAngle(UP,Math.sin(t*.7)*.35);                       // idle: a slow turn while it faces you
+  const dir=toCam.lerp(toMed,ringAim).normalize();rq.setFromUnitVectors(UP,dir);ringPivot.quaternion.slerp(rq,Math.min(1,dt*4));
+  ringPivot.children[0]&&(ringPivot.children[0].rotation.y=t*.6);
+  if(ringMat)ringMat.emissiveIntensity=.02+near*.35+speakGlow*.05;ringLight.intensity=near*2.5;ringLight.position.copy(ringG.worldToLocal(medW.clone())).multiplyScalar(.5);
+  U.uBlast.value=Math.max(U.uBlast.value,near*.8);
+  // docked: speak the oath once; re-arm after the ring is pulled away
+  if(near>.88&&!ringFired&&!oathOn()&&ringAim>.9){ringFired=true;pulseT=0;pulsePh=0;framing=true;sfxCharge(.75+CHD);}
+  if(near<.3){ringFired=false;pulseT=-1;}
+  // aligned: a pulse that quickens for three seconds, then the lantern lets go
+  if(pulseT>=0){pulseT+=dt;const k=Math.min(1,pulseT/.75);pulsePh+=dt*(3.6+k*k*20)*6.283;const a=.5+.5*Math.sin(pulsePh),amp=a*(.35+k*.65);
+    U.uBlast.value=Math.max(U.uBlast.value,.35+amp*.65);if(ringMat)ringMat.emissiveIntensity+=amp*(.4+k*.8);ringLight.intensity+=amp*(1+k*2);
+    bloom.strength=Math.max(bloom.strength,.6+amp*.5*k);if(pulseT>=.75){pulseT=-1;charge();}}
+  {const p=ringG.position.clone().add(new THREE.Vector3(ringR*.9,0,0)).project(cam);rtag.style.transform=`translate(${(p.x+1)/2*innerWidth+4}px,${(1-p.y)/2*innerHeight-12}px)`;
+   rtag.style.opacity=(near<.35&&!ringDrag&&!oathOn()&&chargeT<0)?1:0;}bloom.strength=Math.max(bloom.strength,.5+near*.35);}
+const qBtn=document.getElementById('qBtn'),ltBtn=document.getElementById('ltBtn');
+function applyLantern(id,first){LT=id;const d=LANTERNS[id];try{localStorage.setItem('oathL',id);}catch(e){}
+  hueP.uniforms.uHue.value=d.hue/360;document.body.style.setProperty('--hue',d.hue+'deg');document.body.classList.toggle('hue',d.hue!==0);
+  document.title=d.title;{const h=document.querySelector('#l h1');if(h)h.textContent=EDITION==='gl'?'The Lantern Oaths':d.title;}document.getElementById('oathT').textContent=d.title;document.getElementById('oath').setAttribute('aria-label',d.title);
+  document.querySelector('#rtag small').textContent='to say '+d.title.replace(/^The /,'the ');
+  const O=document.getElementById('oath');O.innerHTML=d.lines.map((t,i)=>i==d.lines.length-1?`<span class="final"><b>${t}</b></span>`:`<span>${t}</span>`).join('');
+  ltBtn.textContent='Lantern · '+d.label;if(!first)loadBody(d.body,()=>showBody(id));if(!first)loadRing(d.ring,()=>showRing(d.ring));
+  if(!first){clips.forEach(c=>{try{c.pause();}catch(e){}});clips=mkClips(id);LEN=d.len.slice();bufs=[];bufsP=null;loadBufs();clipsUnlocked=false;clipTry=false;}}
+if(Object.keys(LANTERNS).length<2)ltBtn.style.display='none';if(EDITION==='site'){document.getElementById('rec').style.display='none';document.getElementById('glLink').style.display='block';}
+ltBtn.onclick=()=>{if(oathOn()||pulseT>=0||chargeT>=0||boomT>=0)return;const ids=Object.keys(LANTERNS);applyLantern(ids[(ids.indexOf(LT)+1)%ids.length]);try{clipTry=false;unlockClips();}catch(e){}};   // the switch tap also unlocks the new voice on iOS
+qBtn.onclick=()=>{if(pinned&&TIER==='lite'){pinned=false;try{localStorage.removeItem('oathQ');}catch(e){}setTier(detectTier());return;}
+  const order=['high','med','low','lite'],nx=pinned?order[order.indexOf(TIER)+1]:'high';pinned=true;try{localStorage.setItem('oathQ',nx);}catch(e){}setTier(nx);};
+// axis: a fine vertical line through the lantern, top of the handle to below the wheel, with ticks and nodes
+const axis=new THREE.Group();scene.add(axis);
+{const LM=(o)=>new THREE.LineBasicMaterial({color:0xcfe6f2,transparent:true,opacity:o,depthWrite:false,blending:THREE.AdditiveBlending});
+  const y0=-2.6,y1=4.4,seg=[];
+  // dashed above and below the body, solid through the lantern's own height
+  for(let y=y0;y<y1;y+=.06){const solid=y>-.1&&y<3.2;if(solid||Math.floor(y/.06)%2==0)seg.push(0,y,0,0,Math.min(y1,y+.06),0);}
+  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(seg,3));axis.add(new THREE.LineSegments(g,LM(.22)));
+  // ticks every 0.25, longer every 1
+  const tk=[];for(let y=Math.ceil(y0*4)/4;y<=y1;y+=.25){const w=Math.abs(y%1)<.01?.09:.035;tk.push(-w,y,0,w,y,0);}
+  const tg=new THREE.BufferGeometry();tg.setAttribute('position',new THREE.Float32BufferAttribute(tk,3));const ticks=new THREE.LineSegments(tg,LM(.28));ticks.userData.face=1;axis.add(ticks);
+  // nodes at the key heights: base, medallion, cap, handle crown, and the far ends
+  const nd=[y0,-.6,0,1.0,2.35,3.1,y1].flatMap(y=>[0,y,0]);const ng=new THREE.BufferGeometry();ng.setAttribute('position',new THREE.Float32BufferAttribute(nd,3));
+  axis.add(new THREE.Points(ng,new THREE.PointsMaterial({color:0xffffff,size:.05,transparent:true,opacity:.8,depthWrite:false,blending:THREE.AdditiveBlending})));}
+// voice base: an AI-orb glow on the ground under the lantern, driven by the live voice spectrum
+const vb=new THREE.Group();vb.position.y=-.32;scene.add(vb);let vbOn=0;const VBN=192,fbuf=new Uint8Array(256);
+const vbGlowC=document.createElement('canvas');vbGlowC.width=vbGlowC.height=256;{const g=vbGlowC.getContext('2d'),gr=g.createRadialGradient(128,128,0,128,128,128);
+  gr.addColorStop(0,'rgba(200,245,255,.9)');gr.addColorStop(.25,'rgba(80,200,255,.55)');gr.addColorStop(.6,'rgba(30,120,255,.15)');gr.addColorStop(1,'rgba(0,0,0,0)');g.fillStyle=gr;g.fillRect(0,0,256,256);}
+const vbDisc=new THREE.Mesh(new THREE.PlaneGeometry(1,1),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(vbGlowC),transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,opacity:0}));
+vbDisc.rotation.x=-Math.PI/2;vb.add(vbDisc);
+const vbRings=[[.62,0xbff4ff,.9],[.78,0x5cc8ff,.6],[.95,0x2f8fff,.35]].map(([R,c,o],k)=>{const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(new Float32Array((VBN+1)*3),3));
+  const l=new THREE.Line(g,new THREE.LineBasicMaterial({color:c,transparent:true,opacity:0,depthWrite:false,blending:THREE.AdditiveBlending}));l.userData={R,o,k};vb.add(l);return l;});
+function stepVoiceBase(dt,t){const talking=oathOn()&&!!ana;vbOn+=((talking?1:0)-vbOn)*Math.min(1,dt*3);vb.visible=vbOn>.01;if(!vb.visible)return;
+  vb.position.y=rig.position.y-.32;if(ana)ana.getByteFrequencyData(fbuf);const lv=U.uVoice.value;
+  vbDisc.scale.setScalar((1.8+lv*1.6)*vbOn);vbDisc.material.opacity=vbOn*(.35+lv*.9);
+  vbRings.forEach(l=>{const {R,o,k}=l.userData,P=l.geometry.attributes.position.array;
+    for(let i=0;i<=VBN;i++){const a=i/VBN*6.283,bin=2+Math.floor(Math.abs(Math.sin(a*1.5+k))*70),e=(fbuf[bin]||0)/255;
+      const rr=R*(1+lv*.25)+e*(.18+k*.06)*vbOn+Math.sin(a*6+t*(2+k)+k)*.012;P[i*3]=Math.cos(a+t*.2*(k%2?-1:1))*rr;P[i*3+1]=0;P[i*3+2]=Math.sin(a+t*.2*(k%2?-1:1))*rr;}
+    l.geometry.attributes.position.needsUpdate=true;l.material.opacity=vbOn*o*(.5+lv*.9);});}
+if(IOS)audT=11;try{hookAudio();loadBufs();if(IOS)prerenderSfx();if(actx){sfxReady();[.5,1,2,2.5,4,4.5].forEach(noiseBuf);}}catch(e){}   // fetch + decode the voice now; the first gesture only has to resume the context
+const comp=new EffectComposer(r);comp.addPass(new RenderPass(scene,cam));
+const bloom=new UnrealBloomPass(new THREE.Vector2(innerWidth/2,innerHeight/2),0.5,0.25,0.92);comp.addPass(bloom);
+function bloomRes(){const k=Q.bloom||.5;bloom.resolution.set(innerWidth*k/2,innerHeight*k/2);bloom.setSize(innerWidth*k/2,innerHeight*k/2);}bloomRes();bloom.enabled=Q.bloom>0;qBtn.textContent='Quality · '+(PIN0?TIER:'auto · '+TIER);const hueP=new ShaderPass({uniforms:{tDiffuse:{value:null},uHue:{value:0}},
+  vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
+  fragmentShader:`uniform sampler2D tDiffuse;uniform float uHue;varying vec2 vUv;
+    vec3 rgb2hsv(vec3 c){vec4 K=vec4(0.,-1./3.,2./3.,-1.);vec4 p=mix(vec4(c.bg,K.wz),vec4(c.gb,K.xy),step(c.b,c.g));vec4 q=mix(vec4(p.xyw,c.r),vec4(c.r,p.yzx),step(p.x,c.r));float d=q.x-min(q.w,q.y);return vec3(abs(q.z+(q.w-q.y)/(6.*d+1e-10)),d/(q.x+1e-10),q.x);}
+    vec3 hsv2rgb(vec3 c){vec3 p=abs(fract(c.xxx+vec3(1.,2./3.,1./3.))*6.-3.);return c.z*mix(vec3(1.),clamp(p-1.,0.,1.),c.y);}
+    void main(){vec4 c=texture2D(tDiffuse,vUv);if(uHue==0.){gl_FragColor=c;return;}
+      float m=max(c.r,max(c.g,c.b));vec3 n=c.rgb/max(m,1e-4);vec3 h=rgb2hsv(n);
+      float w=smoothstep(.40,.47,h.x)*(1.-smoothstep(.70,.76,h.x))*smoothstep(.05,.2,h.y);   // only cyan..blue light
+      vec3 sh=hsv2rgb(vec3(fract(h.x+uHue),h.y,h.z))*m;gl_FragColor=vec4(mix(c.rgb,sh,w),c.a);}`});
+comp.addPass(hueP);applyLantern(LT,true);
+comp.addPass(new OutputPass());
+addEventListener('resize',()=>{cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix();r.setSize(innerWidth,innerHeight);comp.setSize(innerWidth,innerHeight);});
+const clk=new THREE.Clock();document.addEventListener('visibilitychange',()=>{if(document.hidden){r.setAnimationLoop(null);}else{clk.getDelta();last=clk.getElapsedTime();r.setAnimationLoop(loop);}});
+let exposureKick=0;let last=0,ftAvg=16,ftT=0,dpr=r.getPixelRatio();let PRMAX=dpr;
+let pinned=PIN0;
+function setTier(t,auto){TIER=t;Q=TIERS[t];bloom.enabled=Q.bloom>0;bloomRes();
+  energy&&energy.children.forEach((c,i)=>{if(c.isMesh)c.visible=i<Q.orb;});
+  const m=Math.min(devicePixelRatio,Q.dpr);setPR(m);qBtn.textContent='Quality · '+(pinned?t:'auto · '+t);}
+function setPR(v){dpr=v;PRMAX=Math.max(.75,Math.min(devicePixelRatio,Q.dpr));r.setPixelRatio(v);comp.setPixelRatio(v);}
+let skipF=false;const loop=()=>{if(Q.fps===30){skipF=!skipF;if(skipF)return;}const t=clk.getElapsedTime(),dt=Math.min(.05,t-last),raw=t-last;last=t;
+  ftAvg+=(raw*1000-ftAvg)*.05;ftT+=raw;if(ftT>2){ftT=0;if(ftAvg>24&&dpr>(Q.dpr<.75?Q.dpr:.75))setPR(Math.max(Q.dpr<.75?Q.dpr:.75,dpr-.25));else if(ftAvg>26&&dpr<=.75&&TIER!=='lite'&&!pinned)setTier({high:'med',med:'low',low:'lite'}[TIER],true);else if(ftAvg<13&&dpr<PRMAX)setPR(Math.min(PRMAX,dpr+.25));}U.uTime.value=t;
+  rig.position.y=Math.sin(t*.9)*.12+Math.sin(t*.37)*.05;rig.rotation.z=Math.sin(t*.6)*.025;rig.rotation.x=Math.sin(t*.45)*.02;U.uLift.value=rig.position.y;
+  {const want=(ringDrag||ringAuto||near>.1)?Math.atan2(ringG.position.x,ringG.position.z-0)*Math.min(1,.4+near):0;
+   rig.rotation.y+=(Math.max(-1.3,Math.min(1.3,want))-rig.rotation.y)*Math.min(1,dt*(ringDrag?3:1.5));}
+  rig.updateMatrixWorld();U.uRigInv.value.copy(rig.matrixWorld).invert();
+  U.uBlast.value=Math.max(0,U.uBlast.value-dt*1.2);exposureKick=Math.max(0,exposureKick-dt*.35);r.toneMappingExposure=.75+exposureKick*2.6;stepDots(dt,t);stepCharge(dt);stepRing(dt,t);stepTrail(dt);stepVoiceBase(dt,t);stepBoom(dt);stepRingFx(dt);uTalk.value+=((oathOn()?1:0)-uTalk.value)*Math.min(1,dt*2.5);{const lv=Math.min(1,voiceLevel()*5);U.uVoice.value+=(lv-U.uVoice.value)*(lv>U.uVoice.value?.5:.12);}placeTag();
+  shell.position.y=rig.position.y;axis.children.forEach(c=>{if(c.userData.face)c.rotation.y=Math.atan2(cam.position.x,cam.position.z);});{speakGlow+=((oathOn()?1:0)-speakGlow)*Math.min(1,dt*1.5);const sg=speakGlow;
+  const pu=.6+.4*Math.pow(.5+.5*Math.sin(t*1.8),2);[...shell.children,...outlines].forEach((c,i)=>{const m=c.material;if(m.userData.o==null)m.userData.o=m.opacity;
+    m.opacity=m.userData.o*((pu+.15*Math.sin(t*1.8-i*.6))*(1-sg)+sg*2.4);m.color.copy(C_W).lerp(C_B,sg);});shell.scale.setScalar(LS*(1+.006*Math.sin(t*1.8)));}wheel.userData.layers.forEach(l=>l.rotation.y+=l.userData.spin*dt*(1+U.uBlast.value*6));shell.rotation.y=t*.04;shell.children.forEach(c=>{if(c.userData.face)c.rotation.y=Math.atan2(cam.position.x,cam.position.z)-shell.rotation.y;});
+  cueRings.forEach((m,k)=>{const ph=((t*.7+k*.5)%1);m.scale.setScalar(1+ph*.9);m.material.opacity=(1-ph)*.8*(1-U.uBlast.value);});
+  core.intensity=U.uBlast.value*5+4+Math.sin(t*2.3)*1.2+Math.sin(t*7.1)*.4;
+  if(energy){const p=energy.userData.pts.geometry.attributes.position;
+    for(let i=0;i<p.count;i++){let y=p.getY(i)+.004;if(y>.55)y=-.55;p.setY(i,y);}p.needsUpdate=true;energy.rotation.y=t*.3;}
+  if(framing&&!ringDrag){ctl.autoRotate=false;const k=Math.min(1,dt*1.8);
+    _cv.copy(CAM_HOME).applyAxisAngle(UPV,rig.rotation.y);cam.position.lerp(_cv,k);ctl.target.lerp(TGT_HOME,k);}
+  ctl.update();const shk=boomT>=0;if(shk)cam.position.add(_sh);comp.render();if(shk)cam.position.sub(_sh);};r.setAnimationLoop(loop);
+</script></body></html>
